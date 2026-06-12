@@ -2,13 +2,24 @@ use macroquad::prelude::*;
 
 #[macroquad::main("Shadow Dash")]
 async fn main() {
+    set_fullscreen(true);
+    let font = load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap();
+    let bg = load_texture("assets/sprites/bg1/bg1.png").await.unwrap();
+    let player = load_texture("assets/sprites/spr_player/spr_player.png")
+        .await
+        .unwrap();
     loop {
-        clear_background(RED);
+        // since the texture covers the entire screen, all texture x and y values are in the top
+        // left corner (this will be fun later)
+        draw_texture(&bg, 0.0, 0.0, WHITE);
 
-        draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-        draw_rectangle(screen_width() / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
-        draw_circle(screen_width() - 30.0, screen_height() - 30.0, 15.0, YELLOW);
-        draw_text("HELLO", 20.0, 20.0, 20.0, DARKGRAY);
+        let textparams = TextParams {
+            font: Some(&font),
+            font_size: 64,
+            ..Default::default()
+        };
+        draw_texture(&player, 250.0, 250.0, WHITE);
+        draw_text_ex("HELLO", 200.0, 200.0, textparams);
 
         next_frame().await
     }
