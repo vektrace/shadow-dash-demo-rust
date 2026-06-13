@@ -1,2 +1,2 @@
-# shadow-dash-rust
-Shadow Dash in Rust
+# shadow-dash-demo-rust
+Shadow Dash Demo in Rust
