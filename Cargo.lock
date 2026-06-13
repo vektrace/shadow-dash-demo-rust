@@ -319,8 +319,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "shadow_dash"
-version = "0.1.0"
+name = "shadow_dash_demo"
+version = "1.0.2"
 dependencies = [
  "macroquad",
 ]
