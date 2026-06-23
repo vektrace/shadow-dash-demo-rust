@@ -22,11 +22,8 @@ fn window_conf() -> Conf {
 }
 
 struct Game {
-    SPEED: f32,
-    x: f32,
-    y: f32,
+    player: Player,
     font: Font,
-    player: Texture2D,
     delta_time: f32,
     // key_binds: KeyBinds,
 }
@@ -34,13 +31,8 @@ struct Game {
 impl Game {
     async fn new() -> Self {
         Self {
-            SPEED: 250.0,
-            x: 250.0,
-            y: 250.0,
+            player: Player::new().await,
             font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
-            player: load_texture("assets/sprites/spr_player/spr_player.png")
-                .await
-                .unwrap(),
             delta_time: 0.0,
             // key_binds: KeyBinds::new()
         }
@@ -59,11 +51,30 @@ impl Game {
             font_size: 64,
             ..Default::default()
         };
-        draw_texture(&self.player, self.x, self.y, WHITE);
+        draw_texture(&self.player.texture, self.player.x, self.player.y, WHITE);
         draw_text_ex("HELLO", 200.0, 200.0, textparams);
     }
 }
 
+struct Player {
+    SPEED: f32,
+    x: f32,
+    y: f32,
+    texture: Texture2D,
+}
+
+impl Player {
+    async fn new() -> Self {
+        Self {
+            SPEED: 250.0,
+            x: 250.0,
+            y: 250.0,
+            texture: load_texture("assets/sprites/spr_player/spr_player.png")
+                .await
+                .unwrap(),
+        }
+    }
+}
 /*
 type Key = [Option<KeyCode>; 2];
 
@@ -110,9 +121,9 @@ async fn main() {
         // - add helper fn for shorter code when doing 2 keys
 
         if is_key_down(KeyCode::Left) || is_key_down(KeyCode::A) {
-            game.x -= game.SPEED * game.delta_time;
+            game.player.x -= game.player.SPEED * game.delta_time;
         } else if is_key_down(KeyCode::Right) || is_key_down(KeyCode::D) {
-            game.x += game.SPEED * game.delta_time;
+            game.player.x += game.player.SPEED * game.delta_time;
         }
 
         next_frame().await;
