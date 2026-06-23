@@ -1,6 +1,11 @@
-use macroquad::input::KeyCode;
 use macroquad::miniquad::conf::Icon;
 use macroquad::prelude::*;
+
+mod keybinds;
+mod player;
+
+use keybinds::KeyBinds;
+use player::Player;
 
 // TODO:
 // - include_bytes for all assets
@@ -53,86 +58,6 @@ impl Game {
         };
         draw_texture(&self.player.texture, self.player.x, self.player.y, WHITE);
         draw_text_ex("HELLO", 200.0, 200.0, textparams);
-    }
-}
-
-struct Player {
-    speed: f32,
-    jump: f32,
-    dash: f32,
-    x: f32,
-    y: f32,
-    texture: Texture2D,
-}
-
-impl Player {
-    async fn new() -> Self {
-        Self {
-            speed: 250.0,
-            jump: 100.0,
-            dash: 100.0,
-            x: 250.0,
-            y: 250.0,
-            texture: load_texture("assets/sprites/spr_player/spr_player.png")
-                .await
-                .unwrap(),
-        }
-    }
-}
-
-type Key = [Option<KeyCode>; 2];
-
-fn keybind(a: KeyCode, b: KeyCode) -> Key {
-    [Some(a), Some(b)]
-}
-
-struct KeyBind {
-    keys: Key,
-    action: fn(&mut Game),
-}
-
-struct KeyBinds {
-    binds: [KeyBind; 4], // increase when more keys are added
-}
-
-impl KeyBinds {
-    fn new() -> Self {
-        Self {
-            binds: [
-                KeyBind {
-                    keys: keybind(KeyCode::A, KeyCode::Left),
-                    action: Self::action_left,
-                },
-                KeyBind {
-                    keys: keybind(KeyCode::D, KeyCode::Right),
-                    action: Self::action_right,
-                },
-                KeyBind {
-                    keys: keybind(KeyCode::W, KeyCode::Up),
-                    action: Self::action_jump,
-                },
-                KeyBind {
-                    keys: [Some(KeyCode::Space), None],
-                    action: Self::action_dash,
-                },
-            ],
-        }
-    }
-
-    fn action_left(g: &mut Game) {
-        g.player.x -= g.player.speed * g.delta_time;
-    }
-
-    fn action_right(g: &mut Game) {
-        g.player.x += g.player.speed * g.delta_time;
-    }
-
-    fn action_jump(g: &mut Game) {
-        g.player.y -= g.player.jump * g.delta_time;
-    }
-
-    fn action_dash(g: &mut Game) {
-        g.player.x += g.player.dash * g.delta_time;
     }
 }
 
