@@ -57,7 +57,9 @@ impl Game {
 }
 
 struct Player {
-    SPEED: f32,
+    speed: f32,
+    jump: f32,
+    dash: f32,
     x: f32,
     y: f32,
     texture: Texture2D,
@@ -66,7 +68,9 @@ struct Player {
 impl Player {
     async fn new() -> Self {
         Self {
-            SPEED: 250.0,
+            speed: 250.0,
+            jump: 100.0,
+            dash: 100.0,
             x: 250.0,
             y: 250.0,
             texture: load_texture("assets/sprites/spr_player/spr_player.png")
@@ -75,39 +79,67 @@ impl Player {
         }
     }
 }
-/*
+
 type Key = [Option<KeyCode>; 2];
 
 fn keybind(a: KeyCode, b: KeyCode) -> Key {
     [Some(a), Some(b)]
 }
 
+struct KeyBind {
+    keys: Key,
+    action: fn(&mut Game),
+}
+
 struct KeyBinds {
-    left: Key,
-    right: Key,
-    jump: Key,
-    dash: Key,
+    binds: [KeyBind; 4], // increase when more keys are added
 }
 
 impl KeyBinds {
     fn new() -> Self {
         Self {
-            left: keybind(KeyCode::A, KeyCode::Left),
-            right: keybind(KeyCode::D, KeyCode::Right),
-            jump: keybind(KeyCode::W, KeyCode::Up),
-            dash: [Some(KeyCode::Space), None],
+            binds: [
+                KeyBind {
+                    keys: keybind(KeyCode::A, KeyCode::Left),
+                    action: Self::action_left,
+                },
+                KeyBind {
+                    keys: keybind(KeyCode::D, KeyCode::Right),
+                    action: Self::action_right,
+                },
+                KeyBind {
+                    keys: keybind(KeyCode::W, KeyCode::Up),
+                    action: Self::action_jump,
+                },
+                KeyBind {
+                    keys: [Some(KeyCode::Space), None],
+                    action: Self::action_dash,
+                },
+            ],
         }
     }
 
-    fn left(&self) {
-        super::x -= super::SPEED * super::delta_time
+    fn action_left(g: &mut Game) {
+        g.player.x -= g.player.speed * g.delta_time;
+    }
+
+    fn action_right(g: &mut Game) {
+        g.player.x += g.player.speed * g.delta_time;
+    }
+
+    fn action_jump(g: &mut Game) {
+        g.player.y -= g.player.jump * g.delta_time;
+    }
+
+    fn action_dash(g: &mut Game) {
+        g.player.x += g.player.dash * g.delta_time;
     }
 }
-*/
 
 #[macroquad::main(window_conf)]
 async fn main() {
     let mut game = Game::new().await;
+    let key_binds = KeyBinds::new();
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
@@ -120,12 +152,12 @@ async fn main() {
         // - add keybinds with 2 options at the same time
         // - add helper fn for shorter code when doing 2 keys
 
-        if is_key_down(KeyCode::Left) || is_key_down(KeyCode::A) {
-            game.player.x -= game.player.SPEED * game.delta_time;
-        } else if is_key_down(KeyCode::Right) || is_key_down(KeyCode::D) {
-            game.player.x += game.player.SPEED * game.delta_time;
+        for kb in &key_binds.binds {
+            let held = kb.keys.into_iter().any(|k| k.is_some_and(is_key_down));
+            if held {
+                (kb.action)(&mut game);
+            }
         }
-
         next_frame().await;
     }
 }
