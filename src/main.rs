@@ -73,16 +73,12 @@ async fn main() {
 
         game.draw();
 
+        key_binds.do_input(&mut game);
+
         // TODO:
         // - add keybinds with 2 options at the same time
         // - add helper fn for shorter code when doing 2 keys
 
-        for kb in &key_binds.binds {
-            let held = kb.keys.into_iter().any(|k| k.is_some_and(is_key_down));
-            if held {
-                (kb.action)(&mut game);
-            }
-        }
         next_frame().await;
     }
 }
