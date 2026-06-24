@@ -73,10 +73,12 @@ async fn main() {
 
         game.draw();
 
-        key_binds.do_input(&mut game);
 
         game.player.apply_gravity(game.delta_time);
 
+        key_binds.do_input(&mut game);
+
+        game.player.apply_speed(game.delta_time);
         next_frame().await;
     }
 }
