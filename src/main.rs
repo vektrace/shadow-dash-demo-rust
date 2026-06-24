@@ -75,9 +75,7 @@ async fn main() {
 
         key_binds.do_input(&mut game);
 
-        // TODO:
-        // - add keybinds with 2 options at the same time
-        // - add helper fn for shorter code when doing 2 keys
+        game.player.apply_gravity(game.delta_time);
 
         next_frame().await;
     }
