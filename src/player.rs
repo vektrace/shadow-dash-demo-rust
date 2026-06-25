@@ -5,7 +5,7 @@ pub struct Player {
     pub gravity: f32,
     pub jump: f32,
     pub dash: f32,
-    
+
     pub x: f32,
     pub y: f32,
     pub xspeed: f32,
@@ -43,6 +43,5 @@ impl Player {
             self.y += self.yspeed * delta_time;
         }
         self.x += self.xspeed;
-        
     }
 }

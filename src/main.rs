@@ -73,7 +73,6 @@ async fn main() {
 
         game.draw();
 
-
         game.player.apply_gravity(game.delta_time);
 
         key_binds.do_input(&mut game);

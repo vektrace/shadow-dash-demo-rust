@@ -1,5 +1,5 @@
-use macroquad::input::KeyCode;
 use super::Game;
+use macroquad::input::KeyCode;
 use macroquad::input::is_key_down;
 use macroquad::input::is_key_pressed;
 
@@ -13,7 +13,7 @@ pub struct KeyBind {
     pub name: KeyName,
     pub keys: Key,
     pub action: fn(&mut Game),
-    keytype: KeyType
+    keytype: KeyType,
 }
 
 pub struct KeyBinds {
@@ -47,7 +47,6 @@ impl KeyBinds {
                     keys: keybind(KeyCode::D, KeyCode::Right),
                     action: Self::action_right,
                     keytype: KeyType::Hold,
-
                 },
                 KeyBind {
                     name: KeyName::Jump,
@@ -65,20 +64,24 @@ impl KeyBinds {
         }
     }
 
-    pub fn do_input(&self, game: &mut Game) {       
+    pub fn do_input(&self, game: &mut Game) {
         game.player.direction = 0.;
         for kb in &self.binds {
             // to seperate the two types
             let held: bool = match &kb.keytype {
-                KeyType::Hold => kb.keys.into_iter().any(|k: Option<KeyCode>| k.is_some_and(is_key_down)),
-                KeyType::Press => kb.keys.into_iter().any(|k: Option<KeyCode>| k.is_some_and(is_key_pressed)),
+                KeyType::Hold => kb
+                    .keys
+                    .into_iter()
+                    .any(|k: Option<KeyCode>| k.is_some_and(is_key_down)),
+                KeyType::Press => kb
+                    .keys
+                    .into_iter()
+                    .any(|k: Option<KeyCode>| k.is_some_and(is_key_pressed)),
             };
             if held {
                 (kb.action)(game);
             }
         }
-
-
 
         KeyBinds::apply_direction(game);
     }
@@ -98,7 +101,7 @@ impl KeyBinds {
     }
 
     fn action_jump(g: &mut Game) {
-        g.player.yspeed = -1. * g.player.jump * g.delta_time;
+        g.player.yspeed = -g.player.jump * g.delta_time;
     }
 
     fn action_dash(g: &mut Game) {
@@ -106,4 +109,3 @@ impl KeyBinds {
         g.player.yspeed = 0.;
     }
 }
-
