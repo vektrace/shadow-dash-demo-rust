@@ -2,18 +2,10 @@
 name = "shadow_dash_demo"
 version = "1.0.2"
 edition = "2024"
-
-[package.metadata.bundle]
-name = "Shadow Dash"
-identifier = "org.paul8711gamezz.shadowdash"
-icon = [
-  "assets/icon/icon_16.png",
-  "assets/icon/icon_32.png",
-  "assets/icon/icon_64.png",
-  "assets/icon/icon_256.png",
-  "assets/icon/icon_512.png",
-]
-version = "1.0.2"
+description = "A 2D platformer game where you dash and jump through levels"
+authors = ["Paul8711 <contact@paul8711.com>", "Redon4(x2)"]
+license = "AGPL-3.0-only"
+repository = "https://github.com/paul8711-code/shadow-dash-demo-rust"
 
 [dependencies]
 macroquad = { version = "0.4.15", features = ["audio"] }
