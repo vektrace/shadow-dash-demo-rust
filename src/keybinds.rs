@@ -1,4 +1,5 @@
 use super::Game;
+use super::player::Player;
 use macroquad::input::KeyCode;
 use macroquad::input::is_key_down;
 use macroquad::input::is_key_pressed;
@@ -87,25 +88,23 @@ impl KeyBinds {
     }
 
     fn apply_direction(g: &mut Game) {
-        g.player.xspeed = g.player.direction * g.player.speed * g.delta_time;
+        g.player.speed.x = g.player.direction * Player::SPEED * g.delta_time;
     }
 
     fn action_left(g: &mut Game) {
         g.player.direction = -1.;
-        // g.player.xspeed = -1. * g.player.speed * g.delta_time;
     }
 
     fn action_right(g: &mut Game) {
         g.player.direction = 1.;
-        // g.player.xspeed = g.player.speed * g.delta_time;
     }
 
     fn action_jump(g: &mut Game) {
-        g.player.yspeed = -g.player.jump * g.delta_time;
+        g.player.speed.y = -Player::JUMP * g.delta_time;
     }
 
     fn action_dash(g: &mut Game) {
-        g.player.xspeed = g.player.direction * g.player.dash * g.delta_time;
-        g.player.yspeed = 0.;
+        g.player.speed.x = g.player.direction * Player::DASH * g.delta_time;
+        g.player.speed.y = 0.;
     }
 }

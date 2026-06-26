@@ -2,9 +2,11 @@ use macroquad::miniquad::conf::Icon;
 use macroquad::prelude::*;
 
 mod keybinds;
+// mod objects;
 mod player;
 
 use keybinds::KeyBinds;
+// use objects::Object;
 use player::Player;
 
 // TODO:
@@ -31,6 +33,7 @@ struct Game {
     font: Font,
     delta_time: f32,
     // key_binds: KeyBinds,
+    // objects: Vec<Object>,
 }
 
 impl Game {
@@ -40,6 +43,7 @@ impl Game {
             font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
             delta_time: 0.0,
             // key_binds: KeyBinds::new()
+            // objects: vec![],
         }
     }
 
@@ -56,7 +60,12 @@ impl Game {
             font_size: 64,
             ..Default::default()
         };
-        draw_texture(&self.player.texture, self.player.x, self.player.y, WHITE);
+        draw_texture(
+            &self.player.texture,
+            self.player.pos.x,
+            self.player.pos.y,
+            WHITE,
+        );
         draw_text_ex("HELLO", 200.0, 200.0, textparams);
     }
 }
@@ -78,6 +87,8 @@ async fn main() {
         key_binds.do_input(&mut game);
 
         game.player.apply_speed(game.delta_time);
+
+        // game.player.do_collision(&game.objects);
         next_frame().await;
     }
 }
