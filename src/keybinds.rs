@@ -26,6 +26,7 @@ enum KeyType {
     Press,
 }
 
+#[derive(PartialEq)]
 pub enum KeyName {
     Left,
     Right,
@@ -66,6 +67,7 @@ impl KeyBinds {
     }
 
     pub fn do_input(&self, game: &mut Game) {
+        game.player.speed.x = 0.;
         game.player.direction = 0.;
         for kb in &self.binds {
             // to seperate the two types
@@ -79,12 +81,15 @@ impl KeyBinds {
                     .into_iter()
                     .any(|k: Option<KeyCode>| k.is_some_and(is_key_pressed)),
             };
+            // temp fix so dash works
+            if kb.name == KeyName::Dash {
+                KeyBinds::apply_direction(game);
+            }
             if held {
                 (kb.action)(game);
             }
         }
 
-        KeyBinds::apply_direction(game);
     }
 
     fn apply_direction(g: &mut Game) {
