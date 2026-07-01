@@ -120,6 +120,7 @@ async fn main() {
 
         game.player.objects_draw_coll(&game.objects);
         game.player.apply_speed(game.delta_time);
+
         next_frame().await;
     }
 }

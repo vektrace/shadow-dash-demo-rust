@@ -55,7 +55,7 @@ impl KeyBinds {
                     name: KeyName::Jump,
                     keys: keybind(KeyCode::W, KeyCode::Up),
                     action: Self::player_jump,
-                    keytype: KeyType::Hold,
+                    keytype: KeyType::Press,
                 },
                 KeyBind {
                     name: KeyName::Dash,
@@ -111,8 +111,14 @@ impl KeyBinds {
 
     fn player_jump(g: &mut Game) {
         if g.player.can_jump {
-            g.player.is_jumping = true;
+            g.player.can_jump = false;
+            g.player.can_double_jump = true;
+
             g.player.speed.y = -Player::JUMP;
+        } else if g.player.can_double_jump {
+            println!("double jump!");
+            g.player.speed.y = -Player::JUMP;
+            g.player.can_double_jump = false;
         }
     }
 
@@ -122,7 +128,6 @@ impl KeyBinds {
     }
 
     fn player_debug_fly(g: &mut Game) {
-        g.player.is_jumping = true;
         if g.player.speed.y > 0. {
             g.player.speed.y = 0.;
         }
