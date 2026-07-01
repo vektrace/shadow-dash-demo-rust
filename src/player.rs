@@ -7,6 +7,7 @@ pub struct Player {
     pub speed: Vec2,
     pub on_ground: bool,
     pub is_jumping: bool,
+    pub can_jump: bool,
 
     pub direction: f32,
     pub texture: Texture2D,
@@ -29,6 +30,7 @@ impl Player {
 
             on_ground: false,
             is_jumping: false,
+            can_jump: false,
 
             direction: 0.0,
             texture: load_texture("assets/sprites/spr_player/spr_player.png")

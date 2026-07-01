@@ -110,7 +110,7 @@ impl KeyBinds {
     }
 
     fn action_jump(g: &mut Game) {
-        if g.player.on_ground {
+        if g.player.can_jump {
             g.player.is_jumping = true;
             g.player.speed.y = -Player::JUMP;
         }
@@ -124,7 +124,7 @@ impl KeyBinds {
     fn action_debug_fly(g: &mut Game) {
         g.player.is_jumping = true;
         if g.player.speed.y > 0. {
-            g.player.speed.y = 0.
+            g.player.speed.y = 0.;
         }
         g.player.speed.y += -Player::JUMP / 12.;
     }

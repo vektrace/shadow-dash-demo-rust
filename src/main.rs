@@ -59,39 +59,18 @@ impl Game {
                 },
                 Object {
                     cbox: Rect::new(300., 200., 64., 16.),
-                    /* // works, but dont know if properly
-                    // had to read the docs for this lol
-                    texture: Texture2D::from_file_with_format(
-                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
-                    None,
-                    ),
-                    */
                     texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
                         .await
                         .unwrap(),
                 },
                 Object {
                     cbox: Rect::new(364., 216., 64., 16.),
-                    /* // works, but dont know if properly
-                    // had to read the docs for this lol
-                    texture: Texture2D::from_file_with_format(
-                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
-                    None,
-                    ),
-                    */
                     texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
                         .await
                         .unwrap(),
                 },
                 Object {
                     cbox: Rect::new(300., 135., 64., 16.),
-                    /* // works, but dont know if properly
-                    // had to read the docs for this lol
-                    texture: Texture2D::from_file_with_format(
-                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
-                    None,
-                    ),
-                    */
                     texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
                         .await
                         .unwrap(),
@@ -139,7 +118,7 @@ async fn main() {
 
         key_binds.do_input(&mut game);
 
-        game.player.do_collision(&game.objects);
+        game.player.objects_draw_coll(&game.objects);
         game.player.apply_speed(game.delta_time);
         next_frame().await;
     }
