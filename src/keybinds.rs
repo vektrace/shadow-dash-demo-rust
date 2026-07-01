@@ -42,31 +42,31 @@ impl KeyBinds {
                 KeyBind {
                     name: KeyName::Left,
                     keys: keybind(KeyCode::A, KeyCode::Left),
-                    action: Self::action_left,
+                    action: Self::player_left,
                     keytype: KeyType::Hold,
                 },
                 KeyBind {
                     name: KeyName::Right,
                     keys: keybind(KeyCode::D, KeyCode::Right),
-                    action: Self::action_right,
+                    action: Self::player_right,
                     keytype: KeyType::Hold,
                 },
                 KeyBind {
                     name: KeyName::Jump,
                     keys: keybind(KeyCode::W, KeyCode::Up),
-                    action: Self::action_jump,
+                    action: Self::player_jump,
                     keytype: KeyType::Hold,
                 },
                 KeyBind {
                     name: KeyName::Dash,
                     keys: [Some(KeyCode::Space), None],
-                    action: Self::action_dash,
+                    action: Self::player_dash,
                     keytype: KeyType::Press,
                 },
                 KeyBind {
                     name: KeyName::DebugFly,
                     keys: [Some(KeyCode::F), Some(KeyCode::J)],
-                    action: Self::action_debug_fly,
+                    action: Self::player_debug_fly,
                     keytype: KeyType::Hold,
                 },
             ],
@@ -89,7 +89,7 @@ impl KeyBinds {
             };
             // temp fix so dash works (after dash)
             if kb.name == KeyName::Dash {
-                KeyBinds::apply_direction(game);
+                KeyBinds::player_apply_direction(game);
             }
             if held {
                 (kb.action)(game);
@@ -97,31 +97,31 @@ impl KeyBinds {
         }
     }
 
-    fn apply_direction(g: &mut Game) {
+    fn player_apply_direction(g: &mut Game) {
         g.player.speed.x = g.player.direction * Player::SPEED;
     }
 
-    fn action_left(g: &mut Game) {
+    fn player_left(g: &mut Game) {
         g.player.direction = -1.;
     }
 
-    fn action_right(g: &mut Game) {
+    fn player_right(g: &mut Game) {
         g.player.direction = 1.;
     }
 
-    fn action_jump(g: &mut Game) {
+    fn player_jump(g: &mut Game) {
         if g.player.can_jump {
             g.player.is_jumping = true;
             g.player.speed.y = -Player::JUMP;
         }
     }
 
-    fn action_dash(g: &mut Game) {
+    fn player_dash(g: &mut Game) {
         g.player.speed.x = g.player.direction * Player::DASH;
         g.player.speed.y = 0.;
     }
 
-    fn action_debug_fly(g: &mut Game) {
+    fn player_debug_fly(g: &mut Game) {
         g.player.is_jumping = true;
         if g.player.speed.y > 0. {
             g.player.speed.y = 0.;

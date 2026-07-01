@@ -8,9 +8,11 @@ pub struct Object {
     pub texture: Texture2D,
 }
 
+/*
 fn is_in_range(a: f32, b: f32, c: f32) -> bool {
     a < b && b < c
 }
+*/
 
 impl Player {
     pub fn objects_draw_coll(&mut self, objects: &Vec<Object>) {
@@ -21,7 +23,8 @@ impl Player {
 
             if self.cbox.overlaps(&ob.cbox.offset(vec2(0., 0.))) {
                 let inter_rect = self.cbox.intersect(ob.cbox).unwrap();
-                if inter_rect.h == ob.cbox.h {
+                if (inter_rect.h - ob.cbox.h).abs() < 0.000_001 {
+                    //inter_rect.h == ob.cbox.h {
                     // if the entire wall is inside the player
 
                     if self.speed.x > 0. && self.cbox.x < ob.cbox.center().x {
