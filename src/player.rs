@@ -42,7 +42,10 @@ impl Player {
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
+        /*
         self.pos.y += self.speed.y * delta_time;
         self.pos.x += self.speed.x * delta_time;
+        */
+        self.pos += self.speed * delta_time;
     }
 }

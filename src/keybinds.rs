@@ -67,7 +67,6 @@ impl KeyBinds {
     }
 
     pub fn do_input(&self, game: &mut Game) {
-        game.player.speed.x = 0.;
         game.player.direction = 0.;
         for kb in &self.binds {
             // to seperate the two types
