@@ -92,7 +92,7 @@ impl KeyBinds {
     }
 
     fn apply_direction(g: &mut Game) {
-        g.player.speed.x = g.player.direction * Player::SPEED * g.delta_time;
+        g.player.speed.x = g.player.direction * Player::SPEED;
     }
 
     fn action_left(g: &mut Game) {
@@ -104,11 +104,11 @@ impl KeyBinds {
     }
 
     fn action_jump(g: &mut Game) {
-        g.player.speed.y = -Player::JUMP * g.delta_time;
+        g.player.speed.y = -Player::JUMP;
     }
 
     fn action_dash(g: &mut Game) {
-        g.player.speed.x = g.player.direction * Player::DASH * g.delta_time;
+        g.player.speed.x = g.player.direction * Player::DASH;
         g.player.speed.y = 0.;
     }
 }

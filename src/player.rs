@@ -13,8 +13,8 @@ pub struct Player {
 impl Player {
     // units/sec
     pub const SPEED: f32 = 250.0;
-    pub const GRAVITY: f32 = 0.5 * 60.0 * 60.0; // units/sec**2
-    pub const JUMP: f32 = 10000.0;
+    pub const GRAVITY: f32 = 0.5 * 60.0; // units/sec**2
+    pub const JUMP: f32 = 166.0;
     pub const DASH: f32 = 100.0 * 60.0;
 }
 
@@ -33,9 +33,9 @@ impl Player {
         }
     }
 
-    pub fn apply_gravity(&mut self, delta_time: f32) {
+    pub fn apply_gravity(&mut self) {
         if !self.on_ground {
-            self.speed.y += Self::GRAVITY * delta_time;
+            self.speed.y += Self::GRAVITY;
         }
 
         // self.y += self.yspeed * delta_time;
@@ -43,6 +43,6 @@ impl Player {
 
     pub fn apply_speed(&mut self, delta_time: f32) {
         self.pos.y += self.speed.y * delta_time;
-        self.pos.x += self.speed.x;
+        self.pos.x += self.speed.x * delta_time;
     }
 }
