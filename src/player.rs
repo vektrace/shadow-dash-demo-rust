@@ -4,6 +4,7 @@ use macroquad::prelude::*;
 pub struct Player {
     pub pos: Vec2,
     pub speed: Vec2,
+    pub on_ground: bool,
 
     pub direction: f32,
     pub texture: Texture2D,
@@ -23,6 +24,8 @@ impl Player {
             pos: vec2(250.0, 0.0),
             speed: vec2(0.0, 0.0),
 
+            on_ground: false,
+
             direction: 0.0,
             texture: load_texture("assets/sprites/spr_player/spr_player.png")
                 .await
@@ -31,15 +34,15 @@ impl Player {
     }
 
     pub fn apply_gravity(&mut self, delta_time: f32) {
-        self.speed.y += Self::GRAVITY * delta_time;
+        if !self.on_ground {
+            self.speed.y += Self::GRAVITY * delta_time;
+        }
 
         // self.y += self.yspeed * delta_time;
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
-        if self.pos.y < 400. {
-            self.pos.y += self.speed.y * delta_time;
-        }
+        self.pos.y += self.speed.y * delta_time;
         self.pos.x += self.speed.x;
     }
 }

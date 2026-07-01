@@ -2,11 +2,11 @@ use macroquad::miniquad::conf::Icon;
 use macroquad::prelude::*;
 
 mod keybinds;
-// mod objects;
+mod objects;
 mod player;
 
 use keybinds::KeyBinds;
-// use objects::Object;
+use objects::Object;
 use player::Player;
 
 // TODO:
@@ -33,7 +33,7 @@ struct Game {
     font: Font,
     delta_time: f32,
     // key_binds: KeyBinds,
-    // objects: Vec<Object>,
+    objects: Vec<Object>,
 }
 
 impl Game {
@@ -43,7 +43,20 @@ impl Game {
             font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
             delta_time: 0.0,
             // key_binds: KeyBinds::new()
-            // objects: vec![],
+            objects: vec![Object {
+                pos: vec2(100., 100.),
+                size: vec2(64., 16.),
+                /* // works, but dont know if properly
+                // had to read the docs for this lol
+                texture: Texture2D::from_file_with_format(
+                include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
+                None,
+                ),
+                */
+                texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    .await
+                    .unwrap(),
+            }],
         }
     }
 
@@ -88,7 +101,7 @@ async fn main() {
 
         game.player.apply_speed(game.delta_time);
 
-        // game.player.do_collision(&game.objects);
+        game.player.do_collision(&game.objects);
         next_frame().await;
     }
 }

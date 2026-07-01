@@ -89,7 +89,6 @@ impl KeyBinds {
                 (kb.action)(game);
             }
         }
-
     }
 
     fn apply_direction(g: &mut Game) {
