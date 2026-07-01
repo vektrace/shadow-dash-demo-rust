@@ -6,6 +6,7 @@ pub struct Player {
 
     pub speed: Vec2,
     pub on_ground: bool,
+    pub is_jumping: bool,
 
     pub direction: f32,
     pub texture: Texture2D,
@@ -15,18 +16,19 @@ impl Player {
     // units/sec
     pub const SPEED: f32 = 250.0;
     pub const GRAVITY: f32 = 0.5 * 60.0; // units/sec**2
-    pub const JUMP: f32 = 166.0;
+    pub const JUMP: f32 = 400.0;
     pub const DASH: f32 = 100.0 * 60.0;
 }
 
 impl Player {
     pub async fn new() -> Self {
         Self {
-            cbox: Rect::new(250., 250., 32., 32.),
+            cbox: Rect::new(300., 0., 32., 32.),
 
             speed: vec2(0.0, 0.0),
 
             on_ground: false,
+            is_jumping: false,
 
             direction: 0.0,
             texture: load_texture("assets/sprites/spr_player/spr_player.png")
@@ -48,7 +50,6 @@ impl Player {
         self.pos.y += self.speed.y * delta_time;
         self.pos.x += self.speed.x * delta_time;
         */
-        self.cbox
-            .move_to(self.cbox.point() + self.speed * delta_time);
+        self.cbox = self.cbox.offset(self.speed * delta_time);
     }
 }

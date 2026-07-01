@@ -43,19 +43,60 @@ impl Game {
             font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
             delta_time: 0.0,
             // key_binds: KeyBinds::new()
-            objects: vec![Object {
-                cbox: Rect::new(100., 100., 64., 16.),
-                /* // works, but dont know if properly
-                // had to read the docs for this lol
-                texture: Texture2D::from_file_with_format(
-                include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
-                None,
-                ),
-                */
-                texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
-                    .await
-                    .unwrap(),
-            }],
+            objects: vec![
+                Object {
+                    cbox: Rect::new(100., 100., 64., 16.),
+                    /* // works, but dont know if properly
+                    // had to read the docs for this lol
+                    texture: Texture2D::from_file_with_format(
+                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
+                    None,
+                    ),
+                    */
+                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                },
+                Object {
+                    cbox: Rect::new(300., 200., 64., 16.),
+                    /* // works, but dont know if properly
+                    // had to read the docs for this lol
+                    texture: Texture2D::from_file_with_format(
+                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
+                    None,
+                    ),
+                    */
+                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                },
+                Object {
+                    cbox: Rect::new(364., 216., 64., 16.),
+                    /* // works, but dont know if properly
+                    // had to read the docs for this lol
+                    texture: Texture2D::from_file_with_format(
+                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
+                    None,
+                    ),
+                    */
+                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                },
+                Object {
+                    cbox: Rect::new(300., 135., 64., 16.),
+                    /* // works, but dont know if properly
+                    // had to read the docs for this lol
+                    texture: Texture2D::from_file_with_format(
+                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
+                    None,
+                    ),
+                    */
+                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                },
+            ],
         }
     }
 
@@ -98,9 +139,8 @@ async fn main() {
 
         key_binds.do_input(&mut game);
 
-        game.player.apply_speed(game.delta_time);
-
         game.player.do_collision(&game.objects);
+        game.player.apply_speed(game.delta_time);
         next_frame().await;
     }
 }

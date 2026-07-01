@@ -18,7 +18,7 @@ pub struct KeyBind {
 }
 
 pub struct KeyBinds {
-    pub binds: [KeyBind; 4], // increase when more keys are added
+    pub binds: [KeyBind; 5], // increase when more keys are added
 }
 
 enum KeyType {
@@ -32,6 +32,7 @@ pub enum KeyName {
     Right,
     Jump,
     Dash,
+    DebugFly,
 }
 
 impl KeyBinds {
@@ -62,6 +63,12 @@ impl KeyBinds {
                     action: Self::action_dash,
                     keytype: KeyType::Press,
                 },
+                KeyBind {
+                    name: KeyName::DebugFly,
+                    keys: [Some(KeyCode::F), Some(KeyCode::J)],
+                    action: Self::action_debug_fly,
+                    keytype: KeyType::Hold,
+                },
             ],
         }
     }
@@ -80,7 +87,7 @@ impl KeyBinds {
                     .into_iter()
                     .any(|k: Option<KeyCode>| k.is_some_and(is_key_pressed)),
             };
-            // temp fix so dash works
+            // temp fix so dash works (after dash)
             if kb.name == KeyName::Dash {
                 KeyBinds::apply_direction(game);
             }
@@ -103,11 +110,22 @@ impl KeyBinds {
     }
 
     fn action_jump(g: &mut Game) {
-        g.player.speed.y = -Player::JUMP;
+        if g.player.on_ground {
+            g.player.is_jumping = true;
+            g.player.speed.y = -Player::JUMP;
+        }
     }
 
     fn action_dash(g: &mut Game) {
         g.player.speed.x = g.player.direction * Player::DASH;
         g.player.speed.y = 0.;
+    }
+
+    fn action_debug_fly(g: &mut Game) {
+        g.player.is_jumping = true;
+        if g.player.speed.y > 0. {
+            g.player.speed.y = 0.
+        }
+        g.player.speed.y += -Player::JUMP / 12.;
     }
 }
