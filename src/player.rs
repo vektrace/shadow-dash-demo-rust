@@ -2,7 +2,8 @@ use macroquad::prelude::*;
 // use vector2::Vector2;
 
 pub struct Player {
-    pub pos: Vec2,
+    pub cbox: Rect,
+
     pub speed: Vec2,
     pub on_ground: bool,
 
@@ -21,7 +22,8 @@ impl Player {
 impl Player {
     pub async fn new() -> Self {
         Self {
-            pos: vec2(250.0, 0.0),
+            cbox: Rect::new(250., 250., 32., 32.),
+
             speed: vec2(0.0, 0.0),
 
             on_ground: false,
@@ -46,6 +48,7 @@ impl Player {
         self.pos.y += self.speed.y * delta_time;
         self.pos.x += self.speed.x * delta_time;
         */
-        self.pos += self.speed * delta_time;
+        self.cbox
+            .move_to(self.cbox.point() + self.speed * delta_time);
     }
 }

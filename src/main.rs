@@ -44,8 +44,7 @@ impl Game {
             delta_time: 0.0,
             // key_binds: KeyBinds::new()
             objects: vec![Object {
-                pos: vec2(100., 100.),
-                size: vec2(64., 16.),
+                cbox: Rect::new(100., 100., 64., 16.),
                 /* // works, but dont know if properly
                 // had to read the docs for this lol
                 texture: Texture2D::from_file_with_format(
@@ -75,8 +74,8 @@ impl Game {
         };
         draw_texture(
             &self.player.texture,
-            self.player.pos.x,
-            self.player.pos.y,
+            self.player.cbox.x,
+            self.player.cbox.y,
             WHITE,
         );
         draw_text_ex("HELLO", 200.0, 200.0, textparams);
