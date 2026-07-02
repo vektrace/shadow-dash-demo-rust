@@ -1,5 +1,4 @@
 use macroquad::prelude::*;
-// use vector2::Vector2;
 
 pub struct Player {
     pub cbox: Rect,
@@ -18,7 +17,7 @@ pub struct Player {
 impl Player {
     // units/sec
     pub const SPEED: f32 = 250.0;
-    pub const GRAVITY: f32 = 0.5 * 60.0; // units/sec**2
+    pub const GRAVITY: f32 = 0.5 * 60.0;
     pub const JUMP: f32 = 400.0;
     pub const DASH: f32 = 100.0 * 60.0;
 }
@@ -46,15 +45,9 @@ impl Player {
         if !self.on_ground {
             self.speed.y += Self::GRAVITY;
         }
-
-        // self.y += self.yspeed * delta_time;
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
-        /*
-        self.pos.y += self.speed.y * delta_time;
-        self.pos.x += self.speed.x * delta_time;
-        */
         self.cbox = self.cbox.offset(self.speed * delta_time);
     }
 }

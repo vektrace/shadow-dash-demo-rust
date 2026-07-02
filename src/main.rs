@@ -83,10 +83,6 @@ impl Game {
         // clear_background instead of texture so it covers the entire screen
         clear_background(Color::from_hex(0x0000_AEF0));
 
-        // since the texture covers the entire screen, all texture x and y values are in the top
-        // left corner (this will be fun later)
-        // draw_texture(&bg, 0.0, 0.0, WHITE);
-
         let textparams = TextParams {
             font: Some(&self.font),
             font_size: 64,
