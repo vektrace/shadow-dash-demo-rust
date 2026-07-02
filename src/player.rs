@@ -1,6 +1,13 @@
 use super::Object;
 use macroquad::prelude::*;
 
+enum CollisionSide {
+    Top,
+    Bottom,
+    Left,
+    Right,
+}
+
 pub struct Player {
     pub cbox: Rect,
 
@@ -56,42 +63,49 @@ impl Player {
         self.on_ground = false;
         for object in objects {
             let object_cbox = object.cbox();
-            if self.cbox.overlaps(&object_cbox.offset(vec2(0., 0.))) {
-                let inter_rect = self.cbox.intersect(*object_cbox).unwrap();
-                if (inter_rect.h - object_cbox.h).abs() < 0.000_001 {
-                    //inter_rect.h == ob.cbox.h {
-                    // if the entire wall is inside the player
-
-                    if self.speed.x > 0. && self.cbox.x < object_cbox.center().x {
-                        // if going right and on the left of center
-                        self.cbox.x = object_cbox.x - self.cbox.w - 0.;
-                        self.on_ground = true;
-                        println!("left");
-                    } else if self.speed.x < 0. && object_cbox.center().x < self.cbox.x {
-                        // if going left and on the right of center
-                        self.cbox.x = object_cbox.right() + 0.;
-                        self.on_ground = true;
-                        println!("right");
-                    }
-                }
-
-                if self.speed.y > 0. && self.cbox.bottom() < object_cbox.bottom() {
-                    // if moving down and over ob
-
+            let player_cbox = self.cbox;
+            if !player_cbox.overlaps(object_cbox) {
+                continue;
+            }
+            match self.collision_side(object_cbox) {
+                CollisionSide::Top => {
                     self.cbox.y = object_cbox.y - self.cbox.h;
+                    self.speed.y = 0.0;
                     self.on_ground = true;
-
-                    println!("up");
-                } else if self.speed.y < 0. && self.cbox.top() > object_cbox.top() {
-                    // if moving up and under ob
-                    self.cbox.y = object_cbox.bottom();
-                    println!("down");
+                    self.can_jump = true;
+                }
+                CollisionSide::Bottom => {
+                    self.cbox.y = object_cbox.y + object_cbox.h;
+                }
+                CollisionSide::Left => {
+                    self.cbox.x = object_cbox.x - self.cbox.w;
+                }
+                CollisionSide::Right => {
+                    self.cbox.x = object_cbox.x + object_cbox.w;
                 }
             }
         }
-        if self.on_ground {
-            self.can_jump = true;
-            self.speed.y = 0.;
+    }
+
+    fn collision_side(&self, object: &Rect) -> CollisionSide {
+        let overlap_left = (self.cbox.x + self.cbox.w) - object.x;
+        let overlap_right = (object.x + object.w) - self.cbox.x;
+        let overlap_top = (self.cbox.y + self.cbox.h) - object.y;
+        let overlap_bottom = (object.y + object.h) - self.cbox.y;
+
+        let min = overlap_left
+            .min(overlap_right)
+            .min(overlap_top)
+            .min(overlap_bottom);
+
+        if min >= overlap_top {
+            CollisionSide::Top
+        } else if min >= overlap_bottom {
+            CollisionSide::Bottom
+        } else if min >= overlap_left {
+            CollisionSide::Left
+        } else {
+            CollisionSide::Right
         }
     }
 }

@@ -75,6 +75,30 @@ impl Game {
                         .await
                         .unwrap(),
                 )),
+                Box::new(Platform::new(
+                    Rect::new(300., 151., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                )),
+                Box::new(Platform::new(
+                    Rect::new(300., 167., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                )),
+                Box::new(Platform::new(
+                    Rect::new(300., 183., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                )),
+                Box::new(Platform::new(
+                    Rect::new(500., 950., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                )),
             ],
         }
     }
@@ -95,7 +119,12 @@ impl Game {
             WHITE,
         );
         draw_all(&self.objects);
-        draw_text_ex("HELLO", 200.0, 200.0, textparams);
+        draw_text_ex(
+            format!("{}", self.player.can_jump),
+            200.0,
+            200.0,
+            textparams,
+        );
     }
 }
 
@@ -107,16 +136,18 @@ async fn main() {
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
         // x += speed * delta_time
+
+        // first apply all forces, then check collision, then draw frame
         game.delta_time = get_frame_time();
 
-        game.draw();
+        key_binds.do_input(&mut game);
+        game.player.apply_speed(game.delta_time);
 
-        game.player.check_collision(&game.objects);
         game.player.apply_gravity();
 
-        key_binds.do_input(&mut game);
+        game.player.check_collision(&game.objects);
 
-        game.player.apply_speed(game.delta_time);
+        game.draw();
 
         next_frame().await;
     }

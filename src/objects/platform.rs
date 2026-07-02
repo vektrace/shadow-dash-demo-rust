@@ -1,4 +1,4 @@
-use super::{Rect, Texture2D, Object, draw_texture, WHITE};
+use super::{Object, Rect, Texture2D, WHITE, draw_texture};
 
 pub struct Platform {
     cbox: Rect,
@@ -16,9 +16,6 @@ impl Object for Platform {
 
 impl Platform {
     pub fn new(cbox: Rect, texture: Texture2D) -> Self {
-        Self {
-            cbox,
-            texture
-        }
+        Self { cbox, texture }
     }
 }
