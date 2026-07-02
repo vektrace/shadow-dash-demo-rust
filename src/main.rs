@@ -6,7 +6,7 @@ mod objects;
 mod player;
 
 use keybinds::KeyBinds;
-use objects::Object;
+use objects::{Object, Platform, draw_all};
 use player::Player;
 
 // TODO:
@@ -33,7 +33,7 @@ struct Game {
     font: Font,
     delta_time: f32,
     // key_binds: KeyBinds,
-    objects: Vec<Object>,
+    objects: Vec<Box<dyn Object>>,
 }
 
 impl Game {
@@ -44,8 +44,8 @@ impl Game {
             delta_time: 0.0,
             // key_binds: KeyBinds::new()
             objects: vec![
-                Object {
-                    cbox: Rect::new(100., 100., 64., 16.),
+                Box::new(Platform::new(
+                    Rect::new(100., 100., 64., 16.),
                     /* // works, but dont know if properly
                     // had to read the docs for this lol
                     texture: Texture2D::from_file_with_format(
@@ -53,28 +53,28 @@ impl Game {
                     None,
                     ),
                     */
-                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
                         .await
                         .unwrap(),
-                },
-                Object {
-                    cbox: Rect::new(300., 200., 64., 16.),
-                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                )),
+                Box::new(Platform::new(
+                    Rect::new(300., 200., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
                         .await
                         .unwrap(),
-                },
-                Object {
-                    cbox: Rect::new(364., 216., 64., 16.),
-                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                )),
+                Box::new(Platform::new(
+                    Rect::new(364., 216., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
                         .await
                         .unwrap(),
-                },
-                Object {
-                    cbox: Rect::new(300., 135., 64., 16.),
-                    texture: load_texture("assets/sprites/spr_platform/spr_platform.png")
+                )),
+                Box::new(Platform::new(
+                    Rect::new(300., 135., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
                         .await
                         .unwrap(),
-                },
+                )),
             ],
         }
     }
@@ -94,6 +94,7 @@ impl Game {
             self.player.cbox.y,
             WHITE,
         );
+        draw_all(&self.objects);
         draw_text_ex("HELLO", 200.0, 200.0, textparams);
     }
 }
@@ -110,11 +111,11 @@ async fn main() {
 
         game.draw();
 
+        game.player.check_collision(&game.objects);
         game.player.apply_gravity();
 
         key_binds.do_input(&mut game);
 
-        game.player.objects_draw_coll(&game.objects);
         game.player.apply_speed(game.delta_time);
 
         next_frame().await;
