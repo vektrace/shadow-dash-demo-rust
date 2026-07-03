@@ -102,11 +102,11 @@ impl KeyBinds {
     }
 
     fn player_left(g: &mut Game) {
-        g.player.direction = -1.;
+        g.player.direction -= 1.;
     }
 
     fn player_right(g: &mut Game) {
-        g.player.direction = 1.;
+        g.player.direction += 1.;
     }
 
     fn player_jump(g: &mut Game) {
