@@ -99,6 +99,12 @@ impl Game {
                         .await
                         .unwrap(),
                 )),
+                Box::new(Platform::new(
+                    Rect::new(300., 50., 64., 16.),
+                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                        .await
+                        .unwrap(),
+                )),
             ],
         }
     }

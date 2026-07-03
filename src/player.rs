@@ -1,13 +1,6 @@
 use super::Object;
 use macroquad::prelude::*;
 
-enum CollisionSide {
-    Top,
-    Bottom,
-    Left,
-    Right,
-}
-
 pub struct Player {
     pub cbox: Rect,
 
@@ -63,49 +56,36 @@ impl Player {
         self.on_ground = false;
         for object in objects {
             let object_cbox = object.cbox();
-            let player_cbox = self.cbox;
-            if !player_cbox.overlaps(object_cbox) {
+
+            if !self.cbox.overlaps(object_cbox) {
                 continue;
             }
-            match self.collision_side(object_cbox) {
-                CollisionSide::Top => {
-                    self.cbox.y = object_cbox.y - self.cbox.h;
-                    self.speed.y = 0.0;
-                    self.on_ground = true;
-                    self.can_jump = true;
-                }
-                CollisionSide::Bottom => {
-                    self.cbox.y = object_cbox.y + object_cbox.h;
-                }
-                CollisionSide::Left => {
-                    self.cbox.x = object_cbox.x - self.cbox.w;
-                }
-                CollisionSide::Right => {
-                    self.cbox.x = object_cbox.x + object_cbox.w;
-                }
+
+            // calculate overlap (distance)
+            let overlap_left = self.cbox.right() - object_cbox.x;
+            let overlap_right = object_cbox.right() - self.cbox.x;
+            let overlap_top = self.cbox.bottom() - object_cbox.y;
+            let overlap_bottom = object_cbox.bottom() - self.cbox.y;
+
+            // take overlap which is closest to not clipping
+            let min = overlap_left
+                .min(overlap_right)
+                .min(overlap_top)
+                .min(overlap_bottom);
+
+            // check which one is closest to min (not clipping)
+            if min >= overlap_top {
+                self.cbox.y = object_cbox.y - self.cbox.h;
+                self.speed.y = 0.0;
+                self.on_ground = true;
+                self.can_jump = true;
+            } else if min >= overlap_bottom {
+                self.cbox.y = object_cbox.bottom();
+            } else if min >= overlap_left {
+                self.cbox.x = object_cbox.x - self.cbox.w;
+            } else {
+                self.cbox.x = object_cbox.right();
             }
-        }
-    }
-
-    fn collision_side(&self, object: &Rect) -> CollisionSide {
-        let overlap_left = (self.cbox.x + self.cbox.w) - object.x;
-        let overlap_right = (object.x + object.w) - self.cbox.x;
-        let overlap_top = (self.cbox.y + self.cbox.h) - object.y;
-        let overlap_bottom = (object.y + object.h) - self.cbox.y;
-
-        let min = overlap_left
-            .min(overlap_right)
-            .min(overlap_top)
-            .min(overlap_bottom);
-
-        if min >= overlap_top {
-            CollisionSide::Top
-        } else if min >= overlap_bottom {
-            CollisionSide::Bottom
-        } else if min >= overlap_left {
-            CollisionSide::Left
-        } else {
-            CollisionSide::Right
         }
     }
 }
