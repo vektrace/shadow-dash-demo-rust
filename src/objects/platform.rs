@@ -1,4 +1,5 @@
 use super::{Object, Rect, Texture2D, WHITE, draw_texture};
+use macroquad::prelude::*;
 
 pub struct Platform {
     cbox: Rect,
@@ -11,6 +12,12 @@ impl Object for Platform {
     }
     fn draw(&self) {
         draw_texture(&self.texture, self.cbox.x, self.cbox.y, WHITE);
+    }
+    fn z(&self) -> u32 {
+        todo!("read z index from map file");
+    }
+    fn scale(&self) -> Vec2 {
+        todo!("read scale from map file");
     }
 }
 
