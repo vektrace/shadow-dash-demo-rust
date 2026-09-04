@@ -3,9 +3,9 @@ name = "shadow_dash_demo"
 version = "1.0.2"
 edition = "2024"
 description = "A 2D platformer game where you dash and jump through levels"
-authors = ["Paul8711 <contact@paul8711.com>", "Redon4(x2)"]
+authors = ["Vektrace <contact@vektrace.com>", "Redon4(x2)"]
 license = "AGPL-3.0-only"
-repository = "https://github.com/paul8711-code/shadow-dash-demo-rust"
+repository = "https://github.com/vektrace/shadow-dash-demo-rust"
 
 [dependencies]
 macroquad = { version = "0.4.15", features = ["audio"] }
