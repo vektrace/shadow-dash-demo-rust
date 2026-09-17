@@ -49,59 +49,59 @@ impl Game {
                     /* // works, but dont know if properly
                     // had to read the docs for this lol
                     texture: Texture2D::from_file_with_format(
-                    include_bytes!("../assets/sprites/spr_platform/spr_platform.png"),
+                    include_bytes!("../assets/sprites/platform/platform.png"),
                     None,
                     ),
                     */
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(300., 200., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(364., 216., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(300., 135., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(300., 151., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(300., 167., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(300., 183., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(500., 950., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),
                 Box::new(Platform::new(
                     Rect::new(300., 50., 64., 16.),
-                    load_texture("assets/sprites/spr_platform/spr_platform.png")
+                    load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
                 )),

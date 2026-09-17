@@ -36,7 +36,7 @@ impl Player {
             can_double_jump: false,
 
             direction: 0.0,
-            texture: load_texture("assets/sprites/spr_player/spr_player.png")
+            texture: load_texture("assets/sprites/player/player.png")
                 .await
                 .unwrap(),
         }
