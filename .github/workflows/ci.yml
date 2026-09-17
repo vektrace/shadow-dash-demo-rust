@@ -1,0 +1,39 @@
+name: Rust Checks
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  linux:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.9.2
+
+      - name: Formatting Check
+        run: cargo fmt --all --check
+
+      - name: Clippy Check
+        run: cargo clippy --all-targets --all-features --workspace -- -D warnings
+
+      - name: Run Tests
+        run: cargo test --all-features --workspace
