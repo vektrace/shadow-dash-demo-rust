@@ -8,7 +8,6 @@ pub use platform::Platform;
 pub trait Object {
     fn id(&self) -> &str;
     fn cbox(&self) -> &Rect;
-    fn z(&self) -> u32;
     fn properties(&self) -> HashMap<&str, &str>;
     fn draw(&self);
 }
