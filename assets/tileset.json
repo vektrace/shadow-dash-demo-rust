@@ -7,6 +7,7 @@
     },
  "margin":0,
  "name":"Shadow Dash Demo",
+ "objectalignment":"center",
  "spacing":0,
  "tilecount":8,
  "tiledversion":"1.12.2",
