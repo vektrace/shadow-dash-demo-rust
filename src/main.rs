@@ -134,7 +134,7 @@ async fn main() {
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
-        // x += speed * delta_time
+        // x += accell * delta_time
 
         // first apply all forces, then check collision, then draw frame
         game.delta_time = get_frame_time();

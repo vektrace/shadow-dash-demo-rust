@@ -4,7 +4,8 @@ use macroquad::prelude::*;
 pub struct Player {
     pub cbox: Rect,
 
-    pub speed: Vec2,
+    pub accell: Vec2,
+    pub velocity: Vec2,
 
     pub on_ground: bool,
 
@@ -28,7 +29,8 @@ impl Player {
         Self {
             cbox: Rect::new(300., 0., 32., 32.),
 
-            speed: vec2(0.0, 0.0),
+            accell: vec2(0.0, 0.0),
+            velocity: vec2(0., 0.),
 
             on_ground: false,
 
@@ -44,12 +46,13 @@ impl Player {
 
     pub fn apply_gravity(&mut self) {
         if !self.on_ground {
-            self.speed.y += Self::GRAVITY;
+            self.accell.y += Self::GRAVITY;
         }
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
-        self.cbox = self.cbox.offset(self.speed * delta_time);
+
+        self.cbox = self.cbox.offset(self.accell * delta_time);
     }
 
     pub fn check_collision(&mut self, objects: &Vec<Box<dyn Object>>) {
@@ -76,7 +79,7 @@ impl Player {
             // check which one is closest to min (not clipping)
             if min >= overlap_top {
                 self.cbox.y = object_cbox.y - self.cbox.h;
-                self.speed.y = 0.0;
+                self.accell.y = 0.0;
                 self.on_ground = true;
                 self.can_jump = true;
             } else if min >= overlap_bottom {
