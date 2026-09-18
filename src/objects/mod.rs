@@ -6,7 +6,6 @@ mod platform;
 pub use platform::Platform;
 
 pub trait Object {
-    fn id(&self) -> &str;
     fn cbox(&self) -> &Rect;
     fn properties(&self) -> HashMap<&str, &str>;
     fn draw(&self);
