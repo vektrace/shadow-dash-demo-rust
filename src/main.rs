@@ -147,9 +147,10 @@ async fn main() {
         game.delta_time = get_frame_time();
 
         key_binds.do_input(&mut game);
-        game.player.apply_speed(game.delta_time);
 
         game.player.apply_gravity();
+
+        game.player.apply_speed(game.delta_time);
 
         game.player.check_collision(&game.objects);
 
