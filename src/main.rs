@@ -46,13 +46,6 @@ impl Game {
             objects: vec![
                 Box::new(Platform::new(
                     Rect::new(100., 100., 64., 16.),
-                    /* // works, but dont know if properly
-                    // had to read the docs for this lol
-                    texture: Texture2D::from_file_with_format(
-                    include_bytes!("../assets/sprites/platform/platform.png"),
-                    None,
-                    ),
-                    */
                     load_texture("assets/sprites/platform/platform.png")
                         .await
                         .unwrap(),
