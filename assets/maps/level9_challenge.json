@@ -1,0 +1,250 @@
+{
+    "compressionlevel": -1,
+    "height": 48,
+    "infinite": false,
+    "layers": [
+        {
+            "draworder": "topdown",
+            "id": 2,
+            "name": "Objects",
+            "objects": [
+                {
+                    "gid": 1,
+                    "height": 32,
+                    "id": 1,
+                    "name": "",
+                    "opacity": 1,
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 32,
+                    "x": 96,
+                    "y": 680
+                },
+                {
+                    "gid": 50,
+                    "height": 16,
+                    "id": 2,
+                    "name": "",
+                    "opacity": 1,
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 96,
+                    "y": 704
+                },
+                {
+                    "gid": 57,
+                    "height": 16,
+                    "id": 3,
+                    "name": "",
+                    "opacity": 1,
+                    "properties": [
+                        {
+                            "name": "max_x",
+                            "type": "string",
+                            "value": "512"
+                        },
+                        {
+                            "name": "mix_x",
+                            "type": "string",
+                            "value": "256"
+                        },
+                        {
+                            "name": "speed",
+                            "type": "string",
+                            "value": "4"
+                        }
+                    ],
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 352,
+                    "y": 704
+                },
+                {
+                    "gid": 57,
+                    "height": 16,
+                    "id": 4,
+                    "name": "",
+                    "opacity": 1,
+                    "properties": [
+                        {
+                            "name": "max_y",
+                            "type": "string",
+                            "value": "704"
+                        },
+                        {
+                            "name": "min_y",
+                            "type": "string",
+                            "value": "416"
+                        },
+                        {
+                            "name": "speed",
+                            "type": "string",
+                            "value": "4"
+                        }
+                    ],
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 640,
+                    "y": 608
+                },
+                {
+                    "gid": 50,
+                    "height": 16,
+                    "id": 5,
+                    "name": "",
+                    "opacity": 1,
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 576,
+                    "y": 704
+                },
+                {
+                    "gid": 57,
+                    "height": 16,
+                    "id": 6,
+                    "name": "",
+                    "opacity": 1,
+                    "properties": [
+                        {
+                            "name": "max_x",
+                            "type": "string",
+                            "value": "1056"
+                        },
+                        {
+                            "name": "min_x",
+                            "type": "string",
+                            "value": "736"
+                        },
+                        {
+                            "name": "speed",
+                            "type": "string",
+                            "value": "3"
+                        }
+                    ],
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 864,
+                    "y": 416
+                },
+                {
+                    "gid": 61,
+                    "height": 32,
+                    "id": 7,
+                    "name": "",
+                    "opacity": 1,
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 32,
+                    "x": 608,
+                    "y": 104
+                },
+                {
+                    "gid": 50,
+                    "height": 16,
+                    "id": 8,
+                    "name": "",
+                    "opacity": 1,
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 608,
+                    "y": 128
+                },
+                {
+                    "gid": 57,
+                    "height": 16,
+                    "id": 9,
+                    "name": "",
+                    "opacity": 1,
+                    "properties": [
+                        {
+                            "name": "max_y",
+                            "type": "string",
+                            "value": "416"
+                        },
+                        {
+                            "name": "min_y",
+                            "type": "string",
+                            "value": "128"
+                        },
+                        {
+                            "name": "speed",
+                            "type": "string",
+                            "value": "4"
+                        }
+                    ],
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 1216,
+                    "y": 160
+                },
+                {
+                    "gid": 57,
+                    "height": 16,
+                    "id": 10,
+                    "name": "",
+                    "opacity": 1,
+                    "properties": [
+                        {
+                            "name": "max_x",
+                            "type": "string",
+                            "value": "1152"
+                        },
+                        {
+                            "name": "min_x",
+                            "type": "string",
+                            "value": "672"
+                        },
+                        {
+                            "name": "speed",
+                            "type": "string",
+                            "value": "4"
+                        }
+                    ],
+                    "rotation": 0,
+                    "type": "",
+                    "visible": true,
+                    "width": 64,
+                    "x": 800,
+                    "y": 128
+                }
+            ],
+            "opacity": 1,
+            "type": "objectgroup",
+            "visible": true,
+            "x": 0,
+            "y": 0
+        }
+    ],
+    "nextlayerid": 3,
+    "nextobjectid": 11,
+    "orientation": "orthogonal",
+    "renderorder": "right-down",
+    "tiledversion": "1.12.2",
+    "tileheight": 16,
+    "tilesets": [
+        {
+            "firstgid": 1,
+            "source": "..\/tileset.json"
+        }
+    ],
+    "tilewidth": 16,
+    "type": "map",
+    "version": "1.10",
+    "width": 85
+}
