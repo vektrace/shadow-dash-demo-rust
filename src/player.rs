@@ -19,9 +19,9 @@ pub struct Player {
 impl Player {
     // units/sec
     pub const SPEED: f32 = 250.0;
-    pub const GRAVITY: f32 = 0.5 * 60.0;
+    pub const GRAVITY: f32 = 1400.;
     pub const JUMP: f32 = 400.0;
-    pub const DASH: f32 = 100.0 * 60.0;
+    pub const DASH: f32 = 100.;
 }
 
 impl Player {
