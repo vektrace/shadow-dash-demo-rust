@@ -80,7 +80,14 @@ impl Player {
             // check which one is closest to min (not clipping)
             if min >= overlap_top {
                 self.cbox.y = object_cbox.y - self.cbox.h;
-                self.accell.y = 0.0;
+
+                // reset on hitting ground 
+                // ( check_collision is called after input, gravity and 
+                //   apply_speed so it doesn't break jumping because the jump 
+                //   already happend at this point in time )
+                self.accell.y = 0.;
+                self.velocity.y = 0.;
+
                 self.on_ground = true;
                 self.can_jump = true;
             } else if min >= overlap_bottom {
