@@ -135,6 +135,6 @@ impl KeyBinds {
             g.player.accell.y = 0.;
             g.player.velocity.y = 0.;
         }
-        g.player.accell.y = -Player::JUMP / 12.;
+        g.player.accell.y += -Player::JUMP / 200. * Player::GRAVITY;
     }
 }
