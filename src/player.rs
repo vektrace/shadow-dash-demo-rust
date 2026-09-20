@@ -46,7 +46,7 @@ impl Player {
 
     pub fn apply_gravity(&mut self) {
         if !self.on_ground {
-            self.accell.y = Self::GRAVITY;
+            self.accell.y += Self::GRAVITY;
         }
         
     }
@@ -54,6 +54,8 @@ impl Player {
     pub fn apply_speed(&mut self, delta_time: f32) {
         self.velocity += self.accell * delta_time;
         self.cbox = self.cbox.offset(self.velocity * delta_time);
+
+        self.accell *= 0.;
     }
 
     pub fn check_collision(&mut self, objects: &Vec<Box<dyn Object>>) {
