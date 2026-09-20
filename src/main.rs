@@ -119,10 +119,16 @@ impl Game {
         );
         draw_all(&self.objects);
         draw_text_ex(
-            format!("{}", self.player.can_jump),
+            format!("can_jump: {}", self.player.can_jump),
+            10.,
             200.0,
-            200.0,
-            textparams,
+            textparams.clone(),
+        );
+        draw_text_ex(
+            format!("fps: {}", get_fps()),
+            10.,
+            30.,
+            textparams.clone(),
         );
     }
 }
