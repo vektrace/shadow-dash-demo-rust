@@ -124,12 +124,7 @@ impl Game {
             200.0,
             textparams.clone(),
         );
-        draw_text_ex(
-            format!("fps: {}", get_fps()),
-            10.,
-            30.,
-            textparams.clone(),
-        );
+        draw_text_ex(format!("fps: {}", get_fps()), 10., 30., textparams.clone());
     }
 }
 

@@ -50,7 +50,6 @@ impl Player {
         if !self.on_ground {
             self.accell.y += Self::GRAVITY;
         }
-        
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
@@ -85,9 +84,9 @@ impl Player {
             if min >= overlap_top {
                 self.cbox.y = object_cbox.y - self.cbox.h;
 
-                // reset on hitting ground 
-                // ( check_collision is called after input, gravity and 
-                //   apply_speed so it doesn't break jumping because the jump 
+                // reset on hitting ground
+                // ( check_collision is called after input, gravity and
+                //   apply_speed so it doesn't break jumping because the jump
                 //   already happend at this point in time )
                 self.accell.y = 0.;
                 self.velocity.y = 0.;
