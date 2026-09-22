@@ -19,11 +19,14 @@ pub struct Player {
 impl Player {
     // units/sec
     pub const SPEED: f32 = 250.0;
-    pub const GRAVITY: f32 = 0.5 * 60. * 60.; // og value
+    pub const GRAVITY: f32 = 0.5 * 60. * 60.; // og value but with delta time
     pub const JUMP: f32 = 400.0;
     //
     // not * 60 because it doesn't have delta time anymore
     pub const DASH: f32 = 100.;
+
+    // myb for the future
+    // pub const DAMPENING: f32 = 1.1;
 }
 
 impl Player {
@@ -31,7 +34,7 @@ impl Player {
         Self {
             cbox: Rect::new(300., 0., 32., 32.),
 
-            accell: vec2(0.0, 0.0),
+            accell: vec2(0., 0.),
             velocity: vec2(0., 0.),
 
             on_ground: false,
@@ -53,9 +56,13 @@ impl Player {
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
+        // myb for the future
+        // self.accell += -self.velocity * Player::DAMPENING;
+
         self.velocity += self.accell * delta_time;
         self.cbox = self.cbox.offset(self.velocity * delta_time);
 
+        // reset accell after every frame
         self.accell *= 0.;
     }
 
