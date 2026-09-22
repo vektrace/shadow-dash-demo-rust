@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use macroquad::prelude::*;
 
 mod platform;
@@ -7,7 +5,7 @@ pub use platform::Platform;
 
 pub trait Object {
     fn cbox(&self) -> &Rect;
-    fn properties(&self) -> HashMap<&str, &str>;
+    // fn properties(&self) -> HashMap<&str, &str>;
     fn draw(&self);
 }
 

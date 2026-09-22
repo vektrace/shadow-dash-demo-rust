@@ -1,4 +1,4 @@
-use super::{HashMap, Object, Rect, Texture2D, WHITE, draw_texture};
+use super::{Object, Rect, Texture2D, WHITE, draw_texture};
 
 pub struct Platform {
     cbox: Rect,
@@ -8,10 +8,6 @@ pub struct Platform {
 impl Object for Platform {
     fn cbox(&self) -> &Rect {
         &self.cbox
-    }
-
-    fn properties(&self) -> HashMap<&str, &str> {
-        HashMap::new()
     }
 
     fn draw(&self) {
