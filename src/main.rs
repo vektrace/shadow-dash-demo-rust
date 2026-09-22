@@ -119,11 +119,12 @@ impl Game {
         );
         draw_all(&self.objects);
         draw_text_ex(
-            format!("{}", self.player.can_jump),
+            format!("can_jump: {}", self.player.can_jump),
+            10.,
             200.0,
-            200.0,
-            textparams,
+            textparams.clone(),
         );
+        draw_text_ex(format!("fps: {}", get_fps()), 10., 30., textparams.clone());
     }
 }
 
@@ -134,7 +135,7 @@ async fn main() {
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
-        // x += speed * delta_time
+        // x += accell * delta_time
 
         // first apply all forces, then check collision, then draw frame
         game.delta_time = get_frame_time();

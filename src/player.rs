@@ -4,7 +4,8 @@ use macroquad::prelude::*;
 pub struct Player {
     pub cbox: Rect,
 
-    pub speed: Vec2,
+    pub accell: Vec2,
+    pub velocity: Vec2,
 
     pub on_ground: bool,
 
@@ -18,9 +19,14 @@ pub struct Player {
 impl Player {
     // units/sec
     pub const SPEED: f32 = 250.0;
-    pub const GRAVITY: f32 = 0.5 * 60.0;
+    pub const GRAVITY: f32 = 0.5 * 60. * 60.; // og value but with delta time
     pub const JUMP: f32 = 400.0;
-    pub const DASH: f32 = 100.0 * 60.0;
+    //
+    // not * 60 because it doesn't have delta time anymore
+    pub const DASH: f32 = 100.;
+
+    // myb for the future
+    // pub const DAMPENING: f32 = 1.1;
 }
 
 impl Player {
@@ -28,7 +34,8 @@ impl Player {
         Self {
             cbox: Rect::new(300., 0., 32., 32.),
 
-            speed: vec2(0.0, 0.0),
+            accell: vec2(0., 0.),
+            velocity: vec2(0., 0.),
 
             on_ground: false,
 
@@ -44,12 +51,19 @@ impl Player {
 
     pub fn apply_gravity(&mut self) {
         if !self.on_ground {
-            self.speed.y += Self::GRAVITY;
+            self.accell.y += Self::GRAVITY;
         }
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
-        self.cbox = self.cbox.offset(self.speed * delta_time);
+        // myb for the future
+        // self.accell += -self.velocity * Player::DAMPENING;
+
+        self.velocity += self.accell * delta_time;
+        self.cbox = self.cbox.offset(self.velocity * delta_time);
+
+        // reset accell after every frame
+        self.accell *= 0.;
     }
 
     pub fn check_collision(&mut self, objects: &Vec<Box<dyn Object>>) {
@@ -76,7 +90,14 @@ impl Player {
             // check which one is closest to min (not clipping)
             if min >= overlap_top {
                 self.cbox.y = object_cbox.y - self.cbox.h;
-                self.speed.y = 0.0;
+
+                // reset on hitting ground
+                // ( check_collision is called after input, gravity and
+                //   apply_speed so it doesn't break jumping because the jump
+                //   already happend at this point in time )
+                self.accell.y = 0.;
+                self.velocity.y = 0.;
+
                 self.on_ground = true;
                 self.can_jump = true;
             } else if min >= overlap_bottom {

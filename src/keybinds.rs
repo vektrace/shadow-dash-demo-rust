@@ -98,7 +98,7 @@ impl KeyBinds {
     }
 
     fn player_apply_direction(g: &mut Game) {
-        g.player.speed.x = g.player.direction * Player::SPEED;
+        g.player.velocity.x = g.player.direction * Player::SPEED;
     }
 
     fn player_left(g: &mut Game) {
@@ -114,23 +114,28 @@ impl KeyBinds {
             g.player.can_jump = false;
             g.player.can_double_jump = true;
 
-            g.player.speed.y = -Player::JUMP;
+            g.player.velocity.y = -Player::JUMP;
         } else if g.player.can_double_jump {
             println!("double jump!");
-            g.player.speed.y = -Player::JUMP;
+            g.player.velocity.y = -Player::JUMP;
             g.player.can_double_jump = false;
         }
     }
 
     fn player_dash(g: &mut Game) {
-        g.player.speed.x = g.player.direction * Player::DASH;
-        g.player.speed.y = 0.;
+        // not speed or accell because it tp the player and doesnt
+        // accellerate him
+        g.player.cbox.x += g.player.direction * Player::DASH;
+        g.player.accell *= 0.;
+        g.player.velocity.y = 0.;
     }
 
     fn player_debug_fly(g: &mut Game) {
-        if g.player.speed.y > 0. {
-            g.player.speed.y = 0.;
+        if g.player.accell.y > 0. {
+            g.player.accell.y = 0.;
+            g.player.velocity.y = 0.;
         }
-        g.player.speed.y += -Player::JUMP / 12.;
+        g.player.on_ground = true;
+        g.player.accell.y += -Player::JUMP / 800. * Player::GRAVITY;
     }
 }
