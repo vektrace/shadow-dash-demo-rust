@@ -18,7 +18,7 @@ pub struct KeyBind {
 }
 
 pub struct KeyBinds {
-    pub binds: [KeyBind; 5], // increase when more keys are added
+    pub binds: [KeyBind; 6], // increase when more keys are added
 }
 
 enum KeyType {
@@ -32,6 +32,7 @@ pub enum KeyName {
     Right,
     Jump,
     Dash,
+    DebugToggle,
     DebugFly,
 }
 
@@ -61,6 +62,12 @@ impl KeyBinds {
                     name: KeyName::Dash,
                     keys: [Some(KeyCode::Space), None],
                     action: Self::player_dash,
+                    keytype: KeyType::Press,
+                },
+                KeyBind {
+                    name: KeyName::DebugToggle,
+                    keys: [Some(KeyCode::F3), None],
+                    action: Self::player_debug_toggle,
                     keytype: KeyType::Press,
                 },
                 KeyBind {
@@ -140,8 +147,15 @@ impl KeyBinds {
             PlayerDashState::OnCooldown => {}
         }
     }
+    fn player_debug_toggle(g: &mut Game) {
+        g.debug = !g.debug;
+    }
 
     fn player_debug_fly(g: &mut Game) {
+        if !g.debug {
+            return;
+        }
+
         if g.player.accell.y > 0. {
             g.player.accell.y = 0.;
             g.player.velocity.y = 0.;

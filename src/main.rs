@@ -32,6 +32,7 @@ struct Game {
     player: Player,
     font: Font,
     delta_time: f32,
+    debug: bool,
     // key_binds: KeyBinds,
     objects: Vec<Box<dyn Object>>,
 }
@@ -42,6 +43,7 @@ impl Game {
             player: Player::new().await,
             font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
             delta_time: 0.0,
+            debug: false,
             // key_binds: KeyBinds::new()
             objects: vec![
                 Box::new(Platform::new(
@@ -118,38 +120,41 @@ impl Game {
             WHITE,
         );
         draw_all(&self.objects);
-        draw_text_ex(
-            format!("jump: {:#?}", self.player.jump),
-            10.,
-            200.0,
-            textparams.clone(),
-        );
-        draw_text_ex(
-            format!("dash: {:#?}", self.player.dash),
-            10.,
-            240.0,
-            textparams.clone(),
-        );
 
-        draw_text_ex(
-            format!("x/y: {:#?}/{:?}", self.player.cbox.x, self.player.cbox.y),
-            10.,
-            280.0,
-            textparams.clone(),
-        );
-        draw_text_ex(
-            format!("accell: {:#?}", self.player.accell),
-            10.,
-            320.0,
-            textparams.clone(),
-        );
-        draw_text_ex(
-            format!("vel: {:#?}", self.player.velocity),
-            10.,
-            360.0,
-            textparams.clone(),
-        );
-        draw_text_ex(format!("fps: {}", get_fps()), 10., 30., textparams.clone());
+        if self.debug {
+            draw_text_ex(format!("fps: {}", get_fps()), 10., 160., textparams.clone());
+            draw_text_ex(
+                format!("jump: {:#?}", self.player.jump),
+                10.,
+                200.0,
+                textparams.clone(),
+            );
+            draw_text_ex(
+                format!("dash: {:#?}", self.player.dash),
+                10.,
+                240.0,
+                textparams.clone(),
+            );
+
+            draw_text_ex(
+                format!("x/y: {:#?}/{:?}", self.player.cbox.x, self.player.cbox.y),
+                10.,
+                280.0,
+                textparams.clone(),
+            );
+            draw_text_ex(
+                format!("accell: {:#?}", self.player.accell),
+                10.,
+                320.0,
+                textparams.clone(),
+            );
+            draw_text_ex(
+                format!("vel: {:#?}", self.player.velocity),
+                10.,
+                360.0,
+                textparams.clone(),
+            );
+        }
     }
 }
 
@@ -174,6 +179,9 @@ async fn main() {
         game.player.check_collision(&game.objects);
 
         game.draw();
+
+        // reset accell after every frame
+        game.player.accell *= 0.;
 
         next_frame().await;
     }

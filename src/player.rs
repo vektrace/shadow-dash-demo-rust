@@ -75,9 +75,6 @@ impl Player {
 
         self.velocity += self.accell * delta_time;
         self.cbox = self.cbox.offset(self.velocity * delta_time);
-
-        // reset accell after every frame
-        self.accell *= 0.;
     }
 
     pub fn check_collision(&mut self, objects: &Vec<Box<dyn Object>>) {
