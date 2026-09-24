@@ -119,7 +119,7 @@ impl Game {
         );
         draw_all(&self.objects);
         draw_text_ex(
-            format!("can_jump: {}", self.player.can_jump),
+            format!("jump: {:#?}", self.player.jump),
             10.,
             200.0,
             textparams.clone(),

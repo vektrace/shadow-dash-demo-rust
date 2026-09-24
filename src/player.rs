@@ -1,6 +1,20 @@
 use super::Object;
 use macroquad::prelude::*;
 
+#[derive(PartialEq, Debug)]
+pub enum PlayerJumpState {
+    CanJump,
+    CanDoubleJump,
+    Used,
+}
+
+#[derive(PartialEq, Debug)]
+pub enum PlayerDashState {
+    CanDash,
+    IsDashing,
+    OnCooldown,
+}
+
 pub struct Player {
     pub cbox: Rect,
 
@@ -9,8 +23,8 @@ pub struct Player {
 
     pub on_ground: bool,
 
-    pub can_jump: bool,
-    pub can_double_jump: bool,
+    pub jump: PlayerJumpState,
+    pub dash: PlayerDashState,
 
     pub direction: f32,
     pub texture: Texture2D,
@@ -39,8 +53,8 @@ impl Player {
 
             on_ground: false,
 
-            can_jump: false,
-            can_double_jump: false,
+            jump: PlayerJumpState::CanJump,
+            dash: PlayerDashState::CanDash,
 
             direction: 0.0,
             texture: load_texture("assets/sprites/player/player.png")
@@ -50,7 +64,7 @@ impl Player {
     }
 
     pub fn apply_gravity(&mut self) {
-        if !self.on_ground {
+        if !self.on_ground && self.dash != PlayerDashState::IsDashing {
             self.accell.y += Self::GRAVITY;
         }
     }
@@ -99,7 +113,7 @@ impl Player {
                 self.velocity.y = 0.;
 
                 self.on_ground = true;
-                self.can_jump = true;
+                self.jump = PlayerJumpState::CanJump;
             } else if min >= overlap_bottom {
                 self.cbox.y = object_cbox.bottom();
             } else if min >= overlap_left {

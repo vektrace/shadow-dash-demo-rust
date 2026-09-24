@@ -1,5 +1,5 @@
 use super::Game;
-use super::player::Player;
+use super::player::{Player, PlayerDashState, PlayerJumpState};
 use macroquad::input::KeyCode;
 use macroquad::input::is_key_down;
 use macroquad::input::is_key_pressed;
@@ -98,7 +98,9 @@ impl KeyBinds {
     }
 
     fn player_apply_direction(g: &mut Game) {
-        g.player.velocity.x = g.player.direction * Player::SPEED;
+        if g.player.dash != PlayerDashState::IsDashing {
+            g.player.velocity.x = g.player.direction * Player::SPEED;
+        }
     }
 
     fn player_left(g: &mut Game) {
@@ -110,24 +112,33 @@ impl KeyBinds {
     }
 
     fn player_jump(g: &mut Game) {
-        if g.player.can_jump {
-            g.player.can_jump = false;
-            g.player.can_double_jump = true;
+        match g.player.jump {
+            PlayerJumpState::CanJump => {
+                g.player.jump = PlayerJumpState::CanDoubleJump;
 
-            g.player.velocity.y = -Player::JUMP;
-        } else if g.player.can_double_jump {
-            println!("double jump!");
-            g.player.velocity.y = -Player::JUMP;
-            g.player.can_double_jump = false;
+                g.player.velocity.y = -Player::JUMP;
+            }
+            PlayerJumpState::CanDoubleJump => {
+                println!("double jump!");
+                g.player.velocity.y = -Player::JUMP;
+                g.player.jump = PlayerJumpState::Used;
+            }
+            PlayerJumpState::Used => {}
         }
     }
 
     fn player_dash(g: &mut Game) {
-        // not speed or accell because it tp the player and doesnt
-        // accellerate him
-        g.player.cbox.x += g.player.direction * Player::DASH;
-        g.player.accell *= 0.;
-        g.player.velocity.y = 0.;
+        match g.player.dash {
+            PlayerDashState::CanDash => {
+                // not speed or accell because it tp the player and doesnt
+                // accellerate him
+                g.player.cbox.x += g.player.direction * Player::DASH;
+                g.player.accell *= 0.;
+                g.player.velocity.y = 0.;
+            }
+            PlayerDashState::IsDashing => {}
+            PlayerDashState::OnCooldown => {}
+        }
     }
 
     fn player_debug_fly(g: &mut Game) {
