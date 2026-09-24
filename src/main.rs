@@ -124,6 +124,31 @@ impl Game {
             200.0,
             textparams.clone(),
         );
+        draw_text_ex(
+            format!("dash: {:#?}", self.player.dash),
+            10.,
+            240.0,
+            textparams.clone(),
+        );
+
+        draw_text_ex(
+            format!("x/y: {:#?}/{:?}", self.player.cbox.x, self.player.cbox.y),
+            10.,
+            280.0,
+            textparams.clone(),
+        );
+        draw_text_ex(
+            format!("accell: {:#?}", self.player.accell),
+            10.,
+            320.0,
+            textparams.clone(),
+        );
+        draw_text_ex(
+            format!("vel: {:#?}", self.player.velocity),
+            10.,
+            360.0,
+            textparams.clone(),
+        );
         draw_text_ex(format!("fps: {}", get_fps()), 10., 30., textparams.clone());
     }
 }
