@@ -1,13 +1,18 @@
 use macroquad::miniquad::conf::Icon;
 use macroquad::prelude::*;
+use std::sync::OnceLock;
 
 mod keybinds;
 mod objects;
 mod player;
+mod tileset;
 
 use keybinds::KeyBinds;
-use objects::{Object, Platform, draw_all};
+use objects::{Object, draw_all};
 use player::Player;
+use tileset::load_tileset;
+
+static TILESET: OnceLock<Vec<tileset::Tile>> = OnceLock::new();
 
 // TODO:
 // - include_bytes for all assets
@@ -162,6 +167,8 @@ impl Game {
 async fn main() {
     let mut game = Game::new().await;
     let key_binds = KeyBinds::new();
+
+    load_tileset().await;
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
