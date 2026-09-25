@@ -3,6 +3,7 @@ use macroquad::prelude::*;
 use std::sync::OnceLock;
 
 mod keybinds;
+mod map;
 mod objects;
 mod player;
 mod tileset;
@@ -45,67 +46,11 @@ struct Game {
 impl Game {
     async fn new() -> Self {
         Self {
-            font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
             player: Player::new(0., 0.).await,
             delta_time: 0.0,
             debug: false,
             // key_binds: KeyBinds::new()
-            objects: vec![
-                Box::new(Platform::new(
-                    Rect::new(100., 100., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 200., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(364., 216., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 135., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 151., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 167., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 183., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(500., 950., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 50., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-            ],
+            objects: vec![],
         }
     }
 
@@ -172,6 +117,9 @@ async fn main() {
     let key_binds = KeyBinds::new();
 
     load_tileset().await;
+
+    let map = map::load_map("level1").await;
+    game.player = map.place_objects(&mut game.objects).await;
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
