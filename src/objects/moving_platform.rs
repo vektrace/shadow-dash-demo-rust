@@ -2,12 +2,15 @@ use super::{
     DrawTextureParams, Object, Rect, Texture2D, Vec2, WHITE, draw_texture_ex, load_texture,
 };
 
-pub struct Platform {
+pub struct MovingPlatform {
     cbox: Rect,
     texture: Texture2D,
+    start: Vec2,
+    end: Vec2,
+    speed: u32,
 }
 
-impl Object for Platform {
+impl Object for MovingPlatform {
     fn cbox(&self) -> &Rect {
         &self.cbox
     }
@@ -21,13 +24,16 @@ impl Object for Platform {
     }
 }
 
-impl Platform {
-    pub async fn new(cbox: Rect) -> Self {
+impl MovingPlatform {
+    pub async fn new(cbox: Rect, start: Vec2, end: Vec2, speed: u32) -> Self {
         Self {
             cbox,
-            texture: load_texture("assets/sprites/platform/platform.png")
+            texture: load_texture("assets/sprites/moving_platform/moving_platform.png")
                 .await
                 .unwrap(),
+            start,
+            end,
+            speed,
         }
     }
 }

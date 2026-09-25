@@ -1,13 +1,20 @@
 use macroquad::miniquad::conf::Icon;
 use macroquad::prelude::*;
+use std::sync::OnceLock;
 
 mod keybinds;
+mod map;
 mod objects;
 mod player;
+mod tileset;
 
 use keybinds::KeyBinds;
-use objects::{Object, Platform, draw_all};
+use objects::{Object, draw_all};
 use player::Player;
+use tileset::load_tileset;
+
+static TILESET: OnceLock<Vec<tileset::Tile>> = OnceLock::new();
+static FONT: OnceLock<Font> = OnceLock::new();
 
 // TODO:
 // - include_bytes for all assets
@@ -30,7 +37,6 @@ fn window_conf() -> Conf {
 
 struct Game {
     player: Player,
-    font: Font,
     delta_time: f32,
     debug: bool,
     // key_binds: KeyBinds,
@@ -40,67 +46,11 @@ struct Game {
 impl Game {
     async fn new() -> Self {
         Self {
-            player: Player::new().await,
-            font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
+            player: Player::new(0., 0.).await,
             delta_time: 0.0,
             debug: false,
             // key_binds: KeyBinds::new()
-            objects: vec![
-                Box::new(Platform::new(
-                    Rect::new(100., 100., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 200., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(364., 216., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 135., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 151., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 167., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 183., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(500., 950., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 50., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-            ],
+            objects: vec![],
         }
     }
 
@@ -109,7 +59,7 @@ impl Game {
         clear_background(Color::from_hex(0x0000_AEF0));
 
         let textparams = TextParams {
-            font: Some(&self.font),
+            font: Some(FONT.get().unwrap()),
             font_size: 64,
             ..Default::default()
         };
@@ -160,8 +110,16 @@ impl Game {
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    FONT.set(load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap())
+        .ok();
+
     let mut game = Game::new().await;
     let key_binds = KeyBinds::new();
+
+    load_tileset().await;
+
+    let map = map::load_map("level1").await;
+    game.player = map.place_objects(&mut game.objects).await;
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
