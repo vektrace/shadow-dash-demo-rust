@@ -135,16 +135,12 @@ impl KeyBinds {
     }
 
     fn player_dash(g: &mut Game) {
-        match g.player.dash {
-            PlayerDashState::CanDash => {
-                // not speed or accell because it tp the player and doesnt
-                // accellerate him
-                g.player.cbox.x += g.player.direction * Player::DASH;
-                g.player.accell *= 0.;
-                g.player.velocity.y = 0.;
-            }
-            PlayerDashState::IsDashing => {}
-            PlayerDashState::OnCooldown => {}
+        if g.player.dash == PlayerDashState::CanDash {
+            // not speed or accell because it tp the player and doesnt
+            // accellerate him
+            g.player.cbox.x += g.player.direction * Player::DASH;
+            g.player.accell *= 0.;
+            g.player.velocity.y = 0.;
         }
     }
     fn player_debug_toggle(g: &mut Game) {
