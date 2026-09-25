@@ -2,12 +2,12 @@ use super::{
     DrawTextureParams, Object, Rect, Texture2D, Vec2, WHITE, draw_texture_ex, load_texture,
 };
 
-pub struct Platform {
+pub struct Spikes {
     cbox: Rect,
     texture: Texture2D,
 }
 
-impl Object for Platform {
+impl Object for Spikes {
     fn cbox(&self) -> &Rect {
         &self.cbox
     }
@@ -21,11 +21,11 @@ impl Object for Platform {
     }
 }
 
-impl Platform {
+impl Spikes {
     pub async fn new(cbox: Rect) -> Self {
         Self {
             cbox,
-            texture: load_texture("assets/sprites/platform/platform.png")
+            texture: load_texture("assets/sprites/spikes/spikes.png")
                 .await
                 .unwrap(),
         }

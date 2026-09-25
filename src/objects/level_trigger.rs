@@ -2,12 +2,12 @@ use super::{
     DrawTextureParams, Object, Rect, Texture2D, Vec2, WHITE, draw_texture_ex, load_texture,
 };
 
-pub struct Platform {
+pub struct LevelTrigger {
     cbox: Rect,
     texture: Texture2D,
 }
 
-impl Object for Platform {
+impl Object for LevelTrigger {
     fn cbox(&self) -> &Rect {
         &self.cbox
     }
@@ -21,11 +21,11 @@ impl Object for Platform {
     }
 }
 
-impl Platform {
+impl LevelTrigger {
     pub async fn new(cbox: Rect) -> Self {
         Self {
             cbox,
-            texture: load_texture("assets/sprites/platform/platform.png")
+            texture: load_texture("assets/sprites/leveltrigger/leveltrigger.png")
                 .await
                 .unwrap(),
         }
