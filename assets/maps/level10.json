@@ -47,7 +47,7 @@
                             "value": "608"
                         },
                         {
-                            "name": "mix_x",
+                            "name": "min_x",
                             "type": "string",
                             "value": "384"
                         },
