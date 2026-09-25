@@ -90,12 +90,37 @@ impl Player {
 
     fn dash_tick(&mut self, delta_time: f32) {
         let temp_dest =
-            self.cbox.x + (Self::DASH_DIST / (Self::DASH_DUR / delta_time)) * self.direction;
+            self.cbox.x + (Self::DASH_DIST / (Self::DASH_DURATION / delta_time)).clamp(0., Self::DASH_DIST) * self.direction;
 
 
 
-
-
+        // possible exploit with delta_time = 10 (s because of intentional lag) eg. moving to right
+        // self.cbox.x + (100 / (~0.16... / 10) ) * 1
+        // => self.cbox.x + 100 / 0.016...
+        // => self.cbox.x + 6000.
+        //
+        // more math:
+        // self.cbox.x + ( Self::DASH_DIST / (Self::DASH_DURATION / delta_time))
+        // self.cbox.x + ( 100 / (0.16... / 0.16...) ) = 100
+        //
+        // => all delta_time values smaller than the dash duration cause a
+        // dash thats bigger than wanted
+        //
+        //
+        // delta_time = 1 / fps
+        //
+        // 0.16... = 1 / fps | *fps; /0.16...
+        // fps = 1 / 0.16... = 6.0
+        //
+        // => all fps values under [ 1 / dash_duration (currently 0.166..) = ]
+        // 6 cause a bigger than wanted dash
+        //
+        // possible fix: capping the value with
+        // self.cbox.x + min(Self::DASH_DIST, (...) ) * self.direction;
+        // before the direction might make it negative
+        //
+        // min is slit with f32 so clamp it is
+        // self.cbox.x + (...).clamp(0., Self::DASH_DIST) ...
 
 
 
