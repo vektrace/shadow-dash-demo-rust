@@ -44,9 +44,9 @@ impl Player {
 }
 
 impl Player {
-    pub async fn new() -> Self {
+    pub async fn new(x: f32, y: f32) -> Self {
         Self {
-            cbox: Rect::new(300., 0., 32., 32.),
+            cbox: Rect::new(x, y, 32., 32.),
 
             accell: vec2(0., 0.),
             velocity: vec2(0., 0.),

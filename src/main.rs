@@ -40,8 +40,8 @@ struct Game {
 impl Game {
     async fn new() -> Self {
         Self {
-            player: Player::new().await,
             font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
+            player: Player::new(0., 0.).await,
             delta_time: 0.0,
             debug: false,
             // key_binds: KeyBinds::new()
