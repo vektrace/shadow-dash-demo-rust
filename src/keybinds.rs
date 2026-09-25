@@ -9,7 +9,6 @@ type Key = [Option<KeyCode>; 2];
 fn keybind(a: KeyCode, b: KeyCode) -> Key {
     [Some(a), Some(b)]
 }
-
 pub struct KeyBind {
     pub name: KeyName,
     pub keys: Key,
@@ -81,7 +80,10 @@ impl KeyBinds {
     }
 
     pub fn do_input(&self, game: &mut Game) {
-        game.player.direction = 0.;
+        // don't reset the direction while dashing
+        if game.player.dash != PlayerDashState::IsDashing {
+            game.player.direction = 0.;
+        }
         for kb in &self.binds {
             // to seperate the two types
             let held: bool = match &kb.keytype {
@@ -94,20 +96,28 @@ impl KeyBinds {
                     .into_iter()
                     .any(|k: Option<KeyCode>| k.is_some_and(is_key_pressed)),
             };
+
             // temp fix so dash works (after dash)
             if kb.name == KeyName::Dash {
                 KeyBinds::player_apply_direction(game);
             }
-            if held {
+
+            if held
+                && (
+                    // lock all non-special keybinds while dashing
+
+                    // if you're not dashing or if its a special keybind
+                    game.player.dash != PlayerDashState::IsDashing
+                        || [KeyName::DebugToggle].contains(&kb.name)
+                )
+            {
                 (kb.action)(game);
             }
         }
     }
 
     fn player_apply_direction(g: &mut Game) {
-        if g.player.dash != PlayerDashState::IsDashing {
-            g.player.velocity.x = g.player.direction * Player::SPEED;
-        }
+        g.player.velocity.x = g.player.direction * Player::SPEED;
     }
 
     fn player_left(g: &mut Game) {
@@ -138,9 +148,10 @@ impl KeyBinds {
         if g.player.dash == PlayerDashState::CanDash {
             // not speed or accell because it tp the player and doesnt
             // accellerate him
-            g.player.cbox.x += g.player.direction * Player::DASH;
+            g.player.dash = PlayerDashState::IsDashing;
+            g.player.dash_dest = g.player.cbox.x + Player::DASH_DIST * g.player.direction;
             g.player.accell *= 0.;
-            g.player.velocity.y = 0.;
+            g.player.velocity *= 0.;
         }
     }
     fn player_debug_toggle(g: &mut Game) {
