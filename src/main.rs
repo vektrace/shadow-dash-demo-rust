@@ -172,11 +172,7 @@ async fn main() {
 
         key_binds.do_input(&mut game);
 
-        game.player.apply_gravity();
-
-        game.player.apply_speed(game.delta_time);
-
-        game.player.check_collision(&game.objects);
+        game.player.tick(game.delta_time, &game.objects);
 
         game.draw();
 

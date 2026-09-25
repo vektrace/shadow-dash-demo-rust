@@ -42,7 +42,6 @@ impl Player {
     // myb for the future
     // pub const DAMPENING: f32 = 1.1;
 }
-
 impl Player {
     pub async fn new() -> Self {
         Self {
@@ -62,6 +61,18 @@ impl Player {
                 .unwrap(),
         }
     }
+
+    pub fn tick(&mut self, delta_time: f32, objects: &Vec<Box<dyn Object>>) {
+        if self.dash == PlayerDashState::IsDashing {
+            // self.dash_tick();
+        }
+
+        self.apply_gravity();
+        self.apply_speed(delta_time);
+        self.check_collision(objects);
+    }
+
+    // fn dash_tick(&mut self) {}
 
     pub fn apply_gravity(&mut self) {
         if !self.on_ground && self.dash != PlayerDashState::IsDashing {
