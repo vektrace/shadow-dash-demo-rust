@@ -13,6 +13,7 @@ use player::Player;
 use tileset::load_tileset;
 
 static TILESET: OnceLock<Vec<tileset::Tile>> = OnceLock::new();
+static FONT: OnceLock<Font> = OnceLock::new();
 
 // TODO:
 // - include_bytes for all assets
@@ -35,7 +36,6 @@ fn window_conf() -> Conf {
 
 struct Game {
     player: Player,
-    font: Font,
     delta_time: f32,
     debug: bool,
     // key_binds: KeyBinds,
@@ -114,7 +114,7 @@ impl Game {
         clear_background(Color::from_hex(0x0000_AEF0));
 
         let textparams = TextParams {
-            font: Some(&self.font),
+            font: Some(FONT.get().unwrap()),
             font_size: 64,
             ..Default::default()
         };
@@ -165,6 +165,9 @@ impl Game {
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    FONT.set(load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap())
+        .ok();
+
     let mut game = Game::new().await;
     let key_binds = KeyBinds::new();
 
