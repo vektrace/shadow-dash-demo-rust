@@ -12,7 +12,7 @@ pub enum PlayerJumpState {
 pub enum PlayerDashState {
     CanDash,
     IsDashing,
-    // OnCooldown,
+    OnCooldown,
 }
 
 pub struct Player {
@@ -27,6 +27,7 @@ pub struct Player {
     pub dash: PlayerDashState,
 
     pub dash_dest: f32,
+    dash_timer: f32,
 
     pub direction: f32,
     pub texture: Texture2D,
@@ -39,7 +40,8 @@ impl Player {
     pub const JUMP: f32 = 400.0;
 
     pub const DASH_DIST: f32 = 100.;
-    const DASH_DUR: f32 = 0.166_666_67;
+    const DASH_DURATION: f32 = 0.166_666_67;
+    const DASH_COOLDOWN: f32 = 0.416_666_67;
 
     // myb for the future
     // pub const DAMPENING: f32 = 1.1;
@@ -58,6 +60,7 @@ impl Player {
             dash: PlayerDashState::CanDash,
 
             dash_dest: 0.,
+            dash_timer: 0.,
 
             direction: 0.0,
             texture: load_texture("assets/sprites/player/player.png")
@@ -67,8 +70,17 @@ impl Player {
     }
 
     pub fn tick(&mut self, delta_time: f32, objects: &Vec<Box<dyn Object>>) {
-        if self.dash == PlayerDashState::IsDashing {
-            self.dash_tick(delta_time);
+        match self.dash {
+            PlayerDashState::CanDash => {}
+            PlayerDashState::IsDashing => {
+                self.dash_tick(delta_time);
+            }
+            PlayerDashState::OnCooldown => {
+                if self.dash_timer > 0. {
+                    self.dash = PlayerDashState::CanDash;
+                }
+                self.dash_timer += delta_time;
+            }
         }
 
         self.apply_gravity();
@@ -77,20 +89,34 @@ impl Player {
     }
 
     fn dash_tick(&mut self, delta_time: f32) {
-        // let dash_direction = if self.cbox.x < self.dash_dest { 1. } else { -1.};
-
         let temp_dest =
             self.cbox.x + (Self::DASH_DIST / (Self::DASH_DUR / delta_time)) * self.direction;
 
-        if self.direction >= 1. && self.dash_dest <= temp_dest
-            || self.direction <= -1. && temp_dest <= self.dash_dest
+
+
+
+
+
+
+
+        // if it the dest was passed
+        // (moving to the right = if temp_dest is right of it)
+        // or ...
+        if (self.direction >= 1. && self.dash_dest <= temp_dest
+            || self.direction <= -1. && temp_dest <= self.dash_dest)
+            // ... the time ran out
+            || self.dash_timer >= Self::DASH_DURATION
         {
+            self.dash_timer = -Self::DASH_COOLDOWN;
+            self.dash = PlayerDashState::OnCooldown;
+
+            // move player to dest
             self.cbox.x = self.dash_dest;
-            self.dash = PlayerDashState::CanDash;
 
             return;
         }
 
+        self.dash_timer += delta_time;
         self.cbox.x = temp_dest;
     }
 
