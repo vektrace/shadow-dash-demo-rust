@@ -154,6 +154,12 @@ impl Game {
                 360.0,
                 textparams.clone(),
             );
+            draw_text_ex(
+                format!("direction: {:#?}", self.player.direction),
+                10.,
+                400.0,
+                textparams.clone(),
+            );
         }
     }
 }
