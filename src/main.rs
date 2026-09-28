@@ -135,8 +135,8 @@ async fn main() {
     let map = map::load_map("level1").await;
     game.player = map.place_objects(&mut game.objects).await;
 
-    let mut old_screen_width = screen_width();
-    let mut old_screen_height = screen_height();
+    let mut old_screen_width = 0.;
+    let mut old_screen_height = 0.;
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
@@ -148,6 +148,8 @@ async fn main() {
 
             old_screen_width = screen_width();
             old_screen_height = screen_height();
+
+            game.player.consts.reload(map.get_scale());
         }
 
         // first apply all forces, then check collision, then draw frame

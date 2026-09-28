@@ -13,13 +13,18 @@ pub struct Map {
 }
 
 impl Map {
-    pub async fn place_objects(&self, objects: &mut Vec<Box<dyn Object>>) -> Player {
-        let mut player = None;
-
+    pub fn get_scale(&self) -> f32 {
         let scale_x = screen_width() / self.width as f32;
         let scale_y = screen_height() / self.height as f32;
 
         let scale = scale_x.min(scale_y);
+        scale
+    }
+
+    pub async fn place_objects(&self, objects: &mut Vec<Box<dyn Object>>) -> Player {
+        let mut player = None;
+
+        let scale = self.get_scale();
 
         for object in &self.objects {
             let x = (object.x - object.width / 2.0) * scale;

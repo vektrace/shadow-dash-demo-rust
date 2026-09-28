@@ -28,19 +28,48 @@ pub struct Player {
 
     pub direction: f32,
     pub texture: Texture2D,
+
+    pub consts: Consts,
 }
 
-impl Player {
+pub struct Consts {
+    pub speed: f32,
+    pub gravity: f32,
+    pub jump: f32,
+    pub dash: f32,
+}
+
+impl Consts {
+    pub fn new() -> Consts {
+        Self {
+            // units/sec
+            speed: 250.0,
+            gravity: 0.5 * 60. * 60., // og value but with delta time
+            jump: 400.0,
+            //
+            // not * 60 because it doesn't have delta time anymore
+            dash: 100.,
+            // myb for the future
+            // dampening: 1.1,
+        }
+    }
+    pub fn reload(&mut self, scale: f32) {
+        self.speed = Self::SPEED * scale;
+        self.gravity = Self::GRAVITY * scale;
+        self.jump = Self::JUMP * scale;
+        self.dash = Self::DASH * scale;
+    }
+
     // units/sec
-    pub const SPEED: f32 = 250.0;
-    pub const GRAVITY: f32 = 0.5 * 60. * 60.; // og value but with delta time
-    pub const JUMP: f32 = 400.0;
+    const SPEED: f32 = 250.0;
+    const GRAVITY: f32 = 0.5 * 60. * 60.; // og value but with delta time
+    const JUMP: f32 = 400.0;
     //
     // not * 60 because it doesn't have delta time anymore
-    pub const DASH: f32 = 100.;
+    const DASH: f32 = 100.;
 
     // myb for the future
-    // pub const DAMPENING: f32 = 1.1;
+    // const DAMPENING: f32 = 1.1;
 }
 
 impl Player {
@@ -60,18 +89,20 @@ impl Player {
             texture: load_texture("assets/sprites/player/player.png")
                 .await
                 .unwrap(),
+
+            consts: Consts::new(),
         }
     }
 
     pub fn apply_gravity(&mut self) {
         if !self.on_ground && self.dash != PlayerDashState::IsDashing {
-            self.accell.y += Self::GRAVITY;
+            self.accell.y += self.consts.gravity;
         }
     }
 
     pub fn apply_speed(&mut self, delta_time: f32) {
         // myb for the future
-        // self.accell += -self.velocity * Player::DAMPENING;
+        // self.accell += -self.velocity * self.consts.dampening;
 
         self.velocity += self.accell * delta_time;
         self.cbox = self.cbox.offset(self.velocity * delta_time);
