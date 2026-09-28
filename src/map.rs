@@ -1,9 +1,9 @@
 use crate::{TILESET, objects::*, player::Player};
 use macroquad::file::load_file;
 use macroquad::math::{Rect, Vec2};
+use macroquad::window::{screen_height, screen_width};
 use serde::Deserialize;
 
-// TODO: scale map to fit screen size
 pub struct Map {
     // multiply by tile_width
     pub width: u32,
@@ -16,13 +16,21 @@ impl Map {
     pub async fn place_objects(&self, objects: &mut Vec<Box<dyn Object>>) -> Player {
         let mut player = None;
 
+        let scale_x = screen_width() / self.width as f32;
+        let scale_y = screen_height() / self.height as f32;
+
+        let scale = scale_x.min(scale_y);
+
         for object in &self.objects {
-            let x = object.x - object.width / 2.0;
-            let y = object.y - object.height / 2.0;
-            let rect = Rect::new(x, y, object.width, object.height);
+            let x = (object.x - object.width / 2.0) * scale;
+            let y = (object.y - object.height / 2.0) * scale;
+            let rect = Rect::new(x, y, object.width * scale, object.height * scale);
 
             match object._type {
-                Type::Player => player = Some(Player::new(x, y).await),
+                Type::Player => {
+                    player =
+                        Some(Player::new(x, y, object.width * scale, object.height * scale).await)
+                }
                 Type::Platform => objects.push(Box::new(Platform::new(rect).await)),
                 Type::Trampoline => objects.push(Box::new(Trampoline::new(rect).await)),
                 Type::DestroyingPlatform => {
@@ -30,17 +38,17 @@ impl Map {
                 }
                 Type::MovingPlatform => {
                     let start = if let Some(min_x) = object.get_property("min_x") {
-                        Vec2::new(min_x.parse().unwrap(), object.y)
+                        Vec2::new(min_x.parse::<f32>().unwrap() * scale, y)
                     } else if let Some(min_y) = object.get_property("min_y") {
-                        Vec2::new(object.x, min_y.parse().unwrap())
+                        Vec2::new(x, min_y.parse::<f32>().unwrap() * scale)
                     } else {
                         panic!("Either min_x or min_y should be set for a moving platform")
                     };
 
                     let end = if let Some(max_x) = object.get_property("max_x") {
-                        Vec2::new(max_x.parse().unwrap(), object.x)
+                        Vec2::new(max_x.parse::<f32>().unwrap() * scale, y)
                     } else if let Some(max_y) = object.get_property("max_y") {
-                        Vec2::new(object.x, max_y.parse().unwrap())
+                        Vec2::new(x, max_y.parse::<f32>().unwrap() * scale)
                     } else {
                         panic!("Either max_x or max_y should be set for a moving platform")
                     };
@@ -64,9 +72,9 @@ impl Map {
                 Type::LevelTrigger => objects.push(Box::new(LevelTrigger::new(rect).await)),
                 Type::Text => objects.push(Box::new(
                     Text::new(
-                        Rect::new(object.x, object.y, 0., 0.),
+                        Rect::new(object.x * scale, object.y * scale, 0., 0.),
                         &object.text.as_ref().unwrap().text,
-                        object.text.as_ref().unwrap().pixelsize,
+                        (object.text.as_ref().unwrap().pixelsize as f32 * scale) as u16,
                     )
                     .await,
                 )),

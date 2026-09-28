@@ -46,7 +46,7 @@ struct Game {
 impl Game {
     async fn new() -> Self {
         Self {
-            player: Player::new(0., 0.).await,
+            player: Player::new(0., 0., 0., 0.).await,
             delta_time: 0.0,
             debug: false,
             // key_binds: KeyBinds::new()
@@ -63,11 +63,15 @@ impl Game {
             font_size: 64,
             ..Default::default()
         };
-        draw_texture(
+        draw_texture_ex(
             &self.player.texture,
             self.player.cbox.x,
             self.player.cbox.y,
             WHITE,
+            DrawTextureParams {
+                dest_size: Some(Vec2::new(self.player.cbox.w, self.player.cbox.h)),
+                ..Default::default()
+            },
         );
         draw_all(&self.objects);
 
@@ -105,7 +109,11 @@ impl Game {
                 textparams.clone(),
             );
             draw_text_ex(
-                format!("screensize(x/y): {:#?}/{:#?}", macroquad::window::screen_width(), macroquad::window::screen_height()),
+                format!(
+                    "screensize(x/y): {:#?}/{:#?}",
+                    macroquad::window::screen_width(),
+                    macroquad::window::screen_height()
+                ),
                 10.,
                 400.0,
                 textparams.clone(),
@@ -127,9 +135,20 @@ async fn main() {
     let map = map::load_map("level1").await;
     game.player = map.place_objects(&mut game.objects).await;
 
+    let mut old_screen_width = screen_width();
+    let mut old_screen_height = screen_height();
+
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
         // x += accell * delta_time
+
+        if screen_width() != old_screen_width || screen_height() != old_screen_height {
+            game.objects = vec![];
+            game.player = map.place_objects(&mut game.objects).await;
+
+            old_screen_width = screen_width();
+            old_screen_height = screen_height();
+        }
 
         // first apply all forces, then check collision, then draw frame
         game.delta_time = get_frame_time();
