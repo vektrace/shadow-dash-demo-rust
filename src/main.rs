@@ -143,7 +143,7 @@ async fn main() {
         // x += accell * delta_time
 
         if screen_width() != old_screen_width || screen_height() != old_screen_height {
-            game.objects = vec![];
+            game.objects.clear();
             game.player = map.place_objects(&mut game.objects).await;
 
             old_screen_width = screen_width();
