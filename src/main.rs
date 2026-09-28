@@ -104,6 +104,12 @@ impl Game {
                 360.0,
                 textparams.clone(),
             );
+            draw_text_ex(
+                format!("screensize(x/y): {:#?}/{:#?}", macroquad::window::screen_width(), macroquad::window::screen_height()),
+                10.,
+                400.0,
+                textparams.clone(),
+            );
         }
     }
 }
