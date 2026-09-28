@@ -54,13 +54,13 @@ impl Game {
         }
     }
 
-    fn draw(&self) {
+    fn draw(&self, scale: f32) {
         // clear_background instead of texture so it covers the entire screen
         clear_background(Color::from_hex(0x0000_AEF0));
 
         let textparams = TextParams {
             font: Some(FONT.get().unwrap()),
-            font_size: 64,
+            font_size: (64. * scale).round() as u16,
             ..Default::default()
         };
         draw_texture_ex(
@@ -76,48 +76,29 @@ impl Game {
         draw_all(&self.objects);
 
         if self.debug {
-            draw_text_ex(format!("fps: {}", get_fps()), 10., 160., textparams.clone());
-            draw_text_ex(
-                format!("jump: {:#?}", self.player.jump),
-                10.,
-                200.0,
-                textparams.clone(),
-            );
-            draw_text_ex(
-                format!("dash: {:#?}", self.player.dash),
-                10.,
-                240.0,
-                textparams.clone(),
-            );
+            // the starting place
+            let mut place_cords: Vec2 = vec2(10., 200.);
+            place_cords *= scale;
 
-            draw_text_ex(
+            const MARGIN: Vec2 = vec2(0., 40.);
+
+            for text in [
+                format!("fps: {}", get_fps()),
+                format!("jump: {:#?}", self.player.jump),
+                format!("dash: {:#?}", self.player.dash),
                 format!("x/y: {:#?}/{:?}", self.player.cbox.x, self.player.cbox.y),
-                10.,
-                280.0,
-                textparams.clone(),
-            );
-            draw_text_ex(
                 format!("accell: {:#?}", self.player.accell),
-                10.,
-                320.0,
-                textparams.clone(),
-            );
-            draw_text_ex(
                 format!("vel: {:#?}", self.player.velocity),
-                10.,
-                360.0,
-                textparams.clone(),
-            );
-            draw_text_ex(
                 format!(
                     "screensize(x/y): {:#?}/{:#?}",
                     macroquad::window::screen_width(),
                     macroquad::window::screen_height()
                 ),
-                10.,
-                400.0,
-                textparams.clone(),
-            );
+            ] {
+                draw_text_ex(text, place_cords.x, place_cords.y, textparams.clone());
+
+                place_cords += MARGIN * scale;
+            }
         }
     }
 }
@@ -163,7 +144,7 @@ async fn main() {
 
         game.player.check_collision(&game.objects);
 
-        game.draw();
+        game.draw(map.get_scale());
 
         // reset accell after every frame
         game.player.accell *= 0.;
