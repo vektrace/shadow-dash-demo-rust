@@ -89,7 +89,11 @@ impl Game {
                 format!("fps: {}", get_fps()),
                 format!("jump: {:#?}", self.player.jump),
                 format!("dash: {:#?}", self.player.dash),
-                format!("x/y: {:#?}/{:?}", self.player.cbox.x / scale, self.player.cbox.y / scale),
+                format!(
+                    "x/y: {:#?}/{:?}",
+                    self.player.cbox.x / scale,
+                    self.player.cbox.y / scale
+                ),
                 format!("accell: {:#?}", self.player.accell / scale),
                 format!("vel: {:#?}", self.player.velocity / scale),
                 format!(
