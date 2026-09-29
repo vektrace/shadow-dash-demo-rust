@@ -55,14 +55,17 @@ impl Game {
     }
 
     fn draw(&self, scale: f32) {
+        const DEBUG_FONT_SIZE: f32 = 48.;
+
         // clear_background instead of texture so it covers the entire screen
         clear_background(Color::from_hex(0x0000_AEF0));
 
-        let textparams = TextParams {
+        let debug_textparams = TextParams {
             font: Some(FONT.get().unwrap()),
-            font_size: (64. * scale).round() as u16,
+            font_size: (DEBUG_FONT_SIZE * scale).round() as u16,
             ..Default::default()
         };
+
         draw_texture_ex(
             &self.player.texture,
             self.player.cbox.x,
@@ -80,7 +83,7 @@ impl Game {
             let mut place_cords: Vec2 = vec2(10., 200.);
             place_cords *= scale;
 
-            const MARGIN: Vec2 = vec2(0., 40.);
+            const MARGIN: Vec2 = vec2(0., 30.);
 
             for text in [
                 format!("fps: {}", get_fps()),
@@ -95,7 +98,7 @@ impl Game {
                     macroquad::window::screen_height()
                 ),
             ] {
-                draw_text_ex(text, place_cords.x, place_cords.y, textparams.clone());
+                draw_text_ex(text, place_cords.x, place_cords.y, debug_textparams.clone());
 
                 place_cords += MARGIN * scale;
             }
