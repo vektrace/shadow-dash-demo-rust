@@ -12,7 +12,7 @@ pub enum PlayerJumpState {
 pub enum PlayerDashState {
     CanDash,
     IsDashing,
-    OnCooldown,
+    // OnCooldown,
 }
 
 pub struct Player {

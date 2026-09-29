@@ -17,8 +17,7 @@ impl Map {
         let scale_x = screen_width() / self.width as f32;
         let scale_y = screen_height() / self.height as f32;
 
-        let scale = scale_x.min(scale_y);
-        scale
+        scale_x.min(scale_y)
     }
 
     pub async fn place_objects(&self, objects: &mut Vec<Box<dyn Object>>) -> Player {

@@ -5,9 +5,9 @@ use super::{
 pub struct MovingPlatform {
     cbox: Rect,
     texture: Texture2D,
-    start: Vec2,
-    end: Vec2,
-    speed: u32,
+    // start: Vec2,
+    // end: Vec2,
+    // speed: u32,
 }
 
 impl Object for MovingPlatform {
@@ -25,15 +25,15 @@ impl Object for MovingPlatform {
 }
 
 impl MovingPlatform {
-    pub async fn new(cbox: Rect, start: Vec2, end: Vec2, speed: u32) -> Self {
+    pub async fn new(cbox: Rect, _start: Vec2, _end: Vec2, _speed: u32) -> Self {
         Self {
             cbox,
             texture: load_texture("assets/sprites/moving_platform/moving_platform.png")
                 .await
                 .unwrap(),
-            start,
-            end,
-            speed,
+            // start,
+            // end,
+            // speed,
         }
     }
 }

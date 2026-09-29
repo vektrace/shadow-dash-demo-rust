@@ -143,8 +143,7 @@ impl KeyBinds {
                 g.player.accell *= 0.;
                 g.player.velocity.y = 0.;
             }
-            PlayerDashState::IsDashing => {}
-            PlayerDashState::OnCooldown => {}
+            PlayerDashState::IsDashing => {} // PlayerDashState::OnCooldown => {}
         }
     }
     fn player_debug_toggle(g: &mut Game) {
