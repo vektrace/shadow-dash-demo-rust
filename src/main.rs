@@ -89,9 +89,9 @@ impl Game {
                 format!("fps: {}", get_fps()),
                 format!("jump: {:#?}", self.player.jump),
                 format!("dash: {:#?}", self.player.dash),
-                format!("x/y: {:#?}/{:?}", self.player.cbox.x, self.player.cbox.y),
-                format!("accell: {:#?}", self.player.accell),
-                format!("vel: {:#?}", self.player.velocity),
+                format!("x/y: {:#?}/{:?}", self.player.cbox.x / scale, self.player.cbox.y / scale),
+                format!("accell: {:#?}", self.player.accell / scale),
+                format!("vel: {:#?}", self.player.velocity / scale),
                 format!(
                     "screensize(x/y): {:#?}/{:#?}",
                     macroquad::window::screen_width(),
