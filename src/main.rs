@@ -121,6 +121,7 @@ async fn main() {
 
     let mut old_screen_width = 0.;
     let mut old_screen_height = 0.;
+    let mut scale = 0.;
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
@@ -133,7 +134,9 @@ async fn main() {
             old_screen_width = screen_width();
             old_screen_height = screen_height();
 
-            game.player.consts.reload(map.get_scale());
+            scale = map.get_scale();
+
+            game.player.consts.reload(scale);
         }
 
         // first apply all forces, then check collision, then draw frame
@@ -147,7 +150,7 @@ async fn main() {
 
         game.player.check_collision(&game.objects);
 
-        game.draw(map.get_scale());
+        game.draw(scale);
 
         // reset accell after every frame
         game.player.accell *= 0.;
