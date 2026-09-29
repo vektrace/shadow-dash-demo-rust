@@ -1,13 +1,20 @@
 use macroquad::miniquad::conf::Icon;
 use macroquad::prelude::*;
+use std::sync::OnceLock;
 
 mod keybinds;
+mod map;
 mod objects;
 mod player;
+mod tileset;
 
 use keybinds::KeyBinds;
-use objects::{Object, Platform, draw_all};
+use objects::{Object, draw_all};
 use player::Player;
+use tileset::load_tileset;
+
+static TILESET: OnceLock<Vec<tileset::Tile>> = OnceLock::new();
+static FONT: OnceLock<Font> = OnceLock::new();
 
 // TODO:
 // - include_bytes for all assets
@@ -30,7 +37,6 @@ fn window_conf() -> Conf {
 
 struct Game {
     player: Player,
-    font: Font,
     delta_time: f32,
     debug: bool,
     // key_binds: KeyBinds,
@@ -40,132 +46,103 @@ struct Game {
 impl Game {
     async fn new() -> Self {
         Self {
-            player: Player::new().await,
-            font: load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap(),
+            player: Player::new(0., 0., 0., 0.).await,
             delta_time: 0.0,
             debug: false,
             // key_binds: KeyBinds::new()
-            objects: vec![
-                Box::new(Platform::new(
-                    Rect::new(100., 100., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 200., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(364., 216., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 135., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 151., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 167., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 183., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(500., 950., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-                Box::new(Platform::new(
-                    Rect::new(300., 50., 64., 16.),
-                    load_texture("assets/sprites/platform/platform.png")
-                        .await
-                        .unwrap(),
-                )),
-            ],
+            objects: vec![],
         }
     }
 
-    fn draw(&self) {
+    fn draw(&self, scale: f32) {
+        const DEBUG_FONT_SIZE: f32 = 48.;
+
         // clear_background instead of texture so it covers the entire screen
         clear_background(Color::from_hex(0x0000_AEF0));
 
-        let textparams = TextParams {
-            font: Some(&self.font),
-            font_size: 64,
+        let debug_textparams = TextParams {
+            font: Some(FONT.get().unwrap()),
+            font_size: (DEBUG_FONT_SIZE * scale).round() as u16,
             ..Default::default()
         };
-        draw_texture(
+
+        draw_texture_ex(
             &self.player.texture,
             self.player.cbox.x,
             self.player.cbox.y,
             WHITE,
+            DrawTextureParams {
+                dest_size: Some(Vec2::new(self.player.cbox.w, self.player.cbox.h)),
+                ..Default::default()
+            },
         );
         draw_all(&self.objects);
 
         if self.debug {
-            draw_text_ex(format!("fps: {}", get_fps()), 10., 160., textparams.clone());
-            draw_text_ex(
-                format!("jump: {:#?}", self.player.jump),
-                10.,
-                200.0,
-                textparams.clone(),
-            );
-            draw_text_ex(
-                format!("dash: {:#?}", self.player.dash),
-                10.,
-                240.0,
-                textparams.clone(),
-            );
+            // the starting place
+            let mut place_cords: Vec2 = vec2(10., 200.);
+            place_cords *= scale;
 
-            draw_text_ex(
-                format!("x/y: {:#?}/{:?}", self.player.cbox.x, self.player.cbox.y),
-                10.,
-                280.0,
-                textparams.clone(),
-            );
-            draw_text_ex(
-                format!("accell: {:#?}", self.player.accell),
-                10.,
-                320.0,
-                textparams.clone(),
-            );
-            draw_text_ex(
-                format!("vel: {:#?}", self.player.velocity),
-                10.,
-                360.0,
-                textparams.clone(),
-            );
+            const MARGIN: Vec2 = vec2(0., 30.);
+
+            for text in [
+                format!("fps: {}", get_fps()),
+                format!("jump: {:#?}", self.player.jump),
+                format!("dash: {:#?}", self.player.dash),
+                format!(
+                    "x/y: {:#?}/{:?}",
+                    self.player.cbox.x / scale,
+                    self.player.cbox.y / scale
+                ),
+                format!("accell: {:#?}", self.player.accell / scale),
+                format!("vel: {:#?}", self.player.velocity / scale),
+                format!(
+                    "screensize(x/y): {:#?}/{:#?}",
+                    macroquad::window::screen_width(),
+                    macroquad::window::screen_height()
+                ),
+                format!("scale: {:#?}", scale),
+            ] {
+                draw_text_ex(text, place_cords.x, place_cords.y, debug_textparams.clone());
+
+                place_cords += MARGIN * scale;
+            }
         }
     }
 }
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    FONT.set(load_ttf_font("assets/fonts/lubbartz.ttf").await.unwrap())
+        .ok();
+
     let mut game = Game::new().await;
     let key_binds = KeyBinds::new();
+
+    load_tileset().await;
+
+    let map = map::load_map("level1").await;
+    game.player = map.place_objects(&mut game.objects).await;
+
+    let mut old_screen_width = 0.;
+    let mut old_screen_height = 0.;
+    let mut scale = 0.;
 
     loop {
         // delta time: makes for example speed dependent on seconds NOT on frames:
         // x += accell * delta_time
+
+        if screen_width() != old_screen_width || screen_height() != old_screen_height {
+            game.objects.clear();
+            game.player = map.place_objects(&mut game.objects).await;
+
+            old_screen_width = screen_width();
+            old_screen_height = screen_height();
+
+            scale = map.get_scale();
+
+            game.player.consts.reload(scale);
+        }
 
         // first apply all forces, then check collision, then draw frame
         game.delta_time = get_frame_time();
@@ -178,7 +155,7 @@ async fn main() {
 
         game.player.check_collision(&game.objects);
 
-        game.draw();
+        game.draw(scale);
 
         // reset accell after every frame
         game.player.accell *= 0.;
