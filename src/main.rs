@@ -97,6 +97,7 @@ impl Game {
                     macroquad::window::screen_width(),
                     macroquad::window::screen_height()
                 ),
+                format!("scale: {:#?}", scale),
             ] {
                 draw_text_ex(text, place_cords.x, place_cords.y, debug_textparams.clone());
 
